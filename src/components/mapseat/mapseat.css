@@ -1,0 +1,114 @@
+.mapseat{
+    width: 500px;
+}
+
+.mapseat .title{
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.mapseat .main .stage{
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    margin-bottom: 40px;
+}
+
+.mapseat .main .stage::after{
+    content: "";
+    height: 40px;
+    width: 40px;
+    background-color: #D9D9D9;
+}
+
+.mapseat .main .stage p{
+    width: 200px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #D9D9D9;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.mapseat .main .list-row{
+    display: flex;
+    flex-flow: column;
+    gap: 3px;
+}
+
+.mapseat .main .list-row .row{
+    display: flex;
+    height: 12px;
+    justify-content: space-between;
+}
+
+.mapseat .main .list-row .row:hover .rowseat .seat{
+    background-color: #198c07;
+}
+
+.mapseat .main .list-row .row.num{
+    margin-top: 5px;
+}
+
+
+.mapseat .main .list-row .row .textrow{
+    width: 12px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.mapseat .main .list-row .row .rowseat{
+    display: flex;
+    gap: 55px;
+}
+
+.mapseat .main .list-row .row .rowseat .left{
+    width: 196px;
+    height: 100%;
+    background-color: #D9D9D9;
+}
+
+.mapseat .main .list-row .row .rowseat .right{
+    width: 224px;
+    height: 100%;
+    background-color: #D9D9D9;
+}
+
+.mapseat .main .list-row .row .rowseat ul{
+    display: flex;
+    list-style: none;
+}
+
+.mapseat .main .list-row .row .rowseat .seat{
+    width: 14px;
+    height: 14px;
+    border: 1px solid white;
+    background-color: #45BD32;
+    transition: background-color ease-in-out 0.25s;
+}
+
+.mapseat .main .list-row .row .rowseat .seatnum{
+    width: 14px;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.mapseat .main .list-row .row .rowseat .seat:hover{
+    background-color: #26BEC8  !important;
+}

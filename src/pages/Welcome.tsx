@@ -4,10 +4,16 @@ import Category from "../components/category/Category";
 import Footer from "../components/footer/Footer";
 import MainVisual from "../components/mainvisual/MainVisual";
 import MDYT10 from "../components/mdyt10/MDYT10";
+import { useOutletContext } from "react-router-dom";
 
 export default function Welcome(){
     const [show, setShow] = useState(2);
     const [curScroll, setCurScroll] = useState(0);
+    const {setCurPage}:any = useOutletContext();
+
+    useEffect(() => {
+        setCurPage("home");
+    },[])
 
     window.addEventListener("scroll", function() {
         let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
