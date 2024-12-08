@@ -11,6 +11,15 @@ header{
     top: 0;
     left: 0;
     z-index: 9999;
+    transition: top ease-in-out 0.25s;
+}
+
+body.scroll header {
+    top: -70px;
+}
+
+body.top header {
+    top: 0px !important;
 }
 
 header .header-left{

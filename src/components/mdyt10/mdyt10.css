@@ -1,14 +1,33 @@
 .mdyt10{
+    height: 100vh; 
+    position: relative; 
+    background-color: black;
+    z-index: -1;
+}
+
+.mdyt10 .back{
     height: 100vh;
-    background-image: url("./images/image1.png");
-    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.mdyt10 .back img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
 
 .mdyt10 .inner{
+    position: absolute;
+    width: 100vw;
+    top: 0;
+    left: 0;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    align-items: center;
+    align-items: end;
     padding: 0 50px;
 }
 
@@ -20,15 +39,17 @@
     background-size: cover;
     background-position: center;
     padding: 10px 20px;
+    position: relative;
+    margin-bottom: 50px;
 }
 
-.mdyt10 .content figure{
+.mdyt10 .content .logo{
     height: 100px;
     margin-bottom: 20px;
     margin-left: 40px;
 }
 
-.mdyt10 .content figure img{
+.mdyt10 .content .logo img{
     height: 100%;
 }
 
@@ -37,5 +58,16 @@
     border-radius: 8px;
     padding: 10px 20px;
     line-height: 1.2;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+.mdyt10 .content .mount{
+    position: absolute;
+    height: 160px;
+    bottom: -95px;
+    left: -56px;
+}
+
+.mdyt10 .content .mount img{
+    height: 100%;
 }
