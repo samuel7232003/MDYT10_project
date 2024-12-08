@@ -1,0 +1,41 @@
+.mdyt10{
+    height: 100vh;
+    background-image: url("./images/image1.png");
+    background-size: cover;
+}
+
+.mdyt10 .inner{
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    padding: 0 50px;
+}
+
+.mdyt10 .content{
+    height: auto;
+    width: 408px;
+    border-radius: 10px;
+    background-image: url('./images/box.png');
+    background-size: cover;
+    background-position: center;
+    padding: 10px 20px;
+}
+
+.mdyt10 .content figure{
+    height: 100px;
+    margin-bottom: 20px;
+    margin-left: 40px;
+}
+
+.mdyt10 .content figure img{
+    height: 100%;
+}
+
+.mdyt10 .content p{
+    background-color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}

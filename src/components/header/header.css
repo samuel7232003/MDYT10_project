@@ -1,0 +1,81 @@
+header{
+    height: 70px;
+    width: 100vw;
+    background-color: rgba(212, 237, 231, 0.6);
+    box-shadow: 0 4px 4px rgba(255, 255, 255, 0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 36px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+header .header-left{
+    display: flex;
+}
+
+header .header-left figure{
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    border: 1px solid white;
+    overflow: hidden;
+}
+
+header .header-left figure img{
+    height: 100%;
+}
+
+header .header-left ul{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: white;
+    list-style: none;
+}
+
+header .header-left ul li{
+    margin-left: 50px;
+    position: relative;
+    cursor: pointer;
+}
+
+header .header-left ul li::after{
+    content: "";
+    width: 0%;
+    height: 2px;
+    background-color: #26BEC8;
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    transition: width ease-in-out 0.25s;
+}
+
+header .header-left ul li.main::after{
+    width: 100%;
+}
+
+header .header-left ul li:hover::after{
+    width: 100%;
+}
+
+header .header-right p{
+    height: 50px;
+    width: 152px;
+    border-radius: 8px;
+    background-color: rgba(38, 190, 200, 0.8);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.25s;
+}
+
+header .header-right p:hover{
+    background-color: #26BEC8;
+}
