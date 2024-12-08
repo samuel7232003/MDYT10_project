@@ -82,3 +82,21 @@ footer .project .infor .text{
         font-size: 12px;
     }
 }
+
+@media screen and (max-width: 1024px) {
+    footer{
+        flex-flow: column;
+        gap: 20px;
+    }
+
+    footer .clb,
+    footer .project{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 876px) {
+    footer{
+        padding: 50px 20px;
+    }
+}

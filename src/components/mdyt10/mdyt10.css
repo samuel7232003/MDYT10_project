@@ -71,3 +71,22 @@
 .mdyt10 .content .mount img{
     height: 100%;
 }
+
+@media screen and (max-width: 768px){
+    .mdyt10 .inner{
+        padding: 0 20px;
+    }
+
+    .mdyt10 .content {
+        width: 80%;
+        max-width: 340px;
+    }
+
+    .mdyt10 .content .logo{
+        height: 70px;
+    }
+
+    .mdyt10 .content p {
+        font-size: 12px;
+    }
+}

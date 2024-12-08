@@ -12,10 +12,10 @@ export default function MDYT10(){
     return (
         <section className="mdyt10">
             <Carousel autoplay>
-                <figure className='back'><img src={image1} alt="" /></figure>
-                <figure className='back'><img src={image2} alt="" /></figure>
-                <figure className='back'><img src={image3} alt="" /></figure>
-                <figure className='back'><img src={image4} alt="" /></figure>
+                <figure className='back'><img src={image1} alt="" loading='lazy'/></figure>
+                <figure className='back'><img src={image2} alt="" loading='lazy'/></figure>
+                <figure className='back'><img src={image3} alt="" loading='lazy'/></figure>
+                <figure className='back'><img src={image4} alt="" loading='lazy'/></figure>
             </Carousel>
             <div className="inner">
                 <div className="content">

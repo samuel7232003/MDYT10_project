@@ -1,31 +1,25 @@
 import './header.css';
 import mdyt10 from '../../images/mdyt10.png'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Header(){
-
-    let lastScrollTop = 0;
+    const [lastScrollTop, setLastScrollTop] = useState(0);
+    const [hide, setHide] = useState(false);
 
     window.addEventListener("scroll", function() {
         let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
-        if (currentScroll <= lastScrollTop) {
-                document.body.classList.remove('scroll');
-        } else {
-                document.body.classList.add('scroll');
-        }
+        if (currentScroll <= lastScrollTop) setHide(false);
+        else setHide(true);
 
         if (currentScroll === 0) document.body.classList.add("top");
         else document.body.classList.remove("top");
-        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Đảm bảo không giá trị âm
+        setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
     });
 
     window.addEventListener('mousemove', function(e) {
-        if (e.clientY < 70) {
-            document.body.classList.remove('scroll');
-        } else {
-            document.body.classList.add('scroll');
-        }
+        if (e.clientY < 70) setHide(false);
+        else setHide(true);
     });
 
     useEffect(() => {
@@ -33,7 +27,7 @@ export default function Header(){
     },[])
 
     return (
-        <header>
+        <header className={hide? "hide": ""}>
             <div className="header-left">
                 <figure><img src={mdyt10} alt="" /></figure>
                 <nav>

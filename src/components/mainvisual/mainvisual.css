@@ -55,6 +55,7 @@
     flex-flow: column;
     align-items: end;
     padding-top: 186px;
+    z-index: 2;
 }
 
 .mainvisual .content .text figure{
@@ -150,5 +151,36 @@
 
     .mainvisual .image figure.image2{
         left: 147px;
+    }
+}
+
+@media screen and (max-width: 1024px){
+    .mainvisual .image{
+        opacity: 0;
+    }
+
+    .mainvisual .content .text{
+        padding-top: 168px;
+    }
+
+    .category .title .top {
+        height: 40px;
+        overflow: hidden;
+    }
+
+    .category .title .top::after{
+        bottom: 0px;
+    }
+}
+
+@media screen and (max-width: 768px){
+
+    .mainvisual .image{
+        display: none;
+    }
+
+    .mainvisual .content .text {
+        height: auto;
+        width: 400px;
     }
 }

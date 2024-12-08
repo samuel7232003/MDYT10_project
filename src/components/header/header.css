@@ -14,7 +14,7 @@ header{
     transition: top ease-in-out 0.25s;
 }
 
-body.scroll header {
+header.hide {
     top: -70px;
 }
 
@@ -87,4 +87,10 @@ header .header-right p{
 
 header .header-right p:hover{
     background-color: #26BEC8;
+}
+
+@media screen and (max-width: 768px){
+    header .header-left nav{
+        display: none;
+    }
 }
