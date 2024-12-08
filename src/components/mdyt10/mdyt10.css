@@ -90,3 +90,9 @@
         font-size: 12px;
     }
 }
+
+@media screen and (max-width: 425px){
+    .mdyt10 .content .logo{
+        height: 56px;
+    }
+}

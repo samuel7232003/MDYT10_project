@@ -231,3 +231,9 @@
     }
 }
 
+@media screen and (max-width: 425px){
+    .category .title .bottom p{
+        font-size: 12px;
+    }
+}
+
