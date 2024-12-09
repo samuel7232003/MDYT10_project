@@ -5,6 +5,7 @@ export default function MapSeat(){
     const [numRow, setNumRoll] = useState([""]);
     const [indexHover, setIndexHover] = useState<number|null>(20);
     const [sideHover, setSideHover] = useState<boolean|null>(null);
+    const [selectSeat, setSelectSeat] = useState<string[]>([]);
     const numColLeft = 14;
     const numColRight = 16;
 
@@ -26,16 +27,43 @@ export default function MapSeat(){
         setSideHover(side);
     }
 
-    function createList (num:number):ReactNode{
+    function handleChoice(side: boolean, index: number, row: string){
+        let col = side ? index+1 : index+15;
+        let seat = "";
+        if(col<10) seat = row+"0"+col;
+        else seat = row+col
+        const check = selectSeat.find(index => index === seat);
+        if(!check){
+            setSelectSeat([...selectSeat, seat]);
+            console.log(seat);
+        }
+        else {
+            const list = selectSeat.filter(index => index !== seat);
+            setSelectSeat([...list]);
+        }
+    }
+
+    function findColor(side: boolean, index: number, row: string){
+        let col = side ? index+1 : index+15;
+        let seat = "";
+        if(col<10) seat = row+"0"+col;
+        else seat = row+col;
+        if(selectSeat.find(index => index === seat)) return {backgroundColor:"#26BEC8"};
+        if(side === sideHover && index === indexHover) return {backgroundColor:"#198c07"};
+        else return undefined;
+    }
+
+    function createList (num:number, row: string):ReactNode{
         let side = num===14? true: false;
         return(
             <ul>
                 {Array.from({ length: num }, (_, index) => (
                     <li 
-                        style={(side === sideHover && index === indexHover) ? {backgroundColor:"#198c07"} : undefined} 
+                        style={findColor(side, index, row)} 
                         className='seat' 
                         key={index} 
-                        onMouseMove={() => handleBlur(side, index)}>
+                        onMouseMove={() => handleBlur(side, index)}
+                        onClick={() => handleChoice(side, index, row)}>
                     </li>
                 ))}
             </ul>
@@ -54,6 +82,11 @@ export default function MapSeat(){
         )
     }
 
+    function handleRemove(seat: string){
+        const list = selectSeat.filter(index => index !== seat);
+        setSelectSeat([...list]);
+    }
+
     return(
         <div className="mapseat">
             <p className="title">Sơ đồ ghế ngồi đêm nhạc “Mùa Đông Yêu Thương 10”</p>
@@ -68,8 +101,8 @@ export default function MapSeat(){
                             {value === "" ? 
                                 <div className='rowseat'> <div className='left'></div> <div className='right'></div> </div>
                             :<div className='rowseat'>
-                                {createList(numColLeft)}
-                                {createList(numColRight)}
+                                {createList(numColLeft, value)}
+                                {createList(numColRight, value)}
                             </div>} 
                         </li>
                     )}
@@ -78,6 +111,19 @@ export default function MapSeat(){
                         {createListNum(numColRight)}
                     </div></li>
                 </ul>
+            </div>
+            <div className='note'>
+                <div className='item i1'><div></div><p>Vị trí đã đặt</p></div>
+                <div className='item i2'><div></div><p>Vị trí có thể chọn</p></div>
+                <div className='item i3'><div></div><p>Vị trí bạn đang chọn</p></div>
+            </div>
+            <div className='listchoice'>
+                <p>Những vị trí đang chọn:</p>
+                <div>
+                    <ul>
+                        {selectSeat.map(index => <li key={index} onClick={() => handleRemove(index)}>{index}</li>)}
+                    </ul>
+                </div>
             </div>
         </div>
     )

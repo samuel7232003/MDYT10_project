@@ -10,11 +10,15 @@
     text-align: center;
 }
 
+.mapseat .main{
+    margin-bottom: 20px;
+}
+
 .mapseat .main .stage{
     display: flex;
     align-items: center;
     flex-flow: column;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .mapseat .main .stage::after{
@@ -110,5 +114,86 @@
 }
 
 .mapseat .main .list-row .row .rowseat .seat:hover{
-    background-color: #26BEC8  !important;
+    background-color: #d6e40f  !important;
+}
+
+.mapseat .note{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.mapseat .note .item{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 14px;
+}
+
+.mapseat .note .item div{
+    height: 14px;
+    width: 14px;
+    border: 1px solid white;
+}
+
+.mapseat .note .item.i1 div{
+    background-color: #D9D9D9;
+}
+
+.mapseat .note .item.i2 div{
+    background-color: #45BD32;
+}
+
+.mapseat .note .item.i3 div{
+    background-color: #26BEC8
+}
+
+.mapseat .listchoice{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+}
+
+.mapseat .listchoice p{
+    color: white;
+}
+
+.mapseat .listchoice div {
+    height: 40px;
+    width: 300px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+}
+
+.mapseat .listchoice div::-webkit-scrollbar{
+    height: 5px;
+}
+
+.mapseat .listchoice div ul{
+    display: flex;
+    gap: 5px;
+}
+
+.mapseat .listchoice div ul li{
+    height: 25px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background-color: #26BEC8;
+    color: white;
+    font-weight: bold;
+    transition: background-color ease-in-out 0.25s;
+    cursor: pointer;
+}
+
+.mapseat .listchoice div ul li:hover{
+    background-color: red;
 }
