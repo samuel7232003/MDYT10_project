@@ -94,6 +94,44 @@
     margin-top: -10px;
 }
 
+.formbook .form .item div {
+    height: 40px;
+    width: 300px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+}
+
+.formbook .form .item div::-webkit-scrollbar{
+    height: 5px;
+}
+
+.formbook .form .item ul{
+    display: flex;
+    gap: 5px;
+}
+
+.formbook .form .item ul li{
+    height: 25px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background-color: #26BEC8;
+    color: white;
+    font-weight: bold;
+    transition: background-color ease-in-out 0.25s;
+    cursor: pointer;
+}
+
+.formbook .form .item div ul li:hover{
+    background-color: red;
+}
+
 .formbook .btn-submit{
     background-color: #26BEC8;
     width: 136px;
@@ -104,4 +142,8 @@
     font-weight: bold;
     border-radius: 8px;
     justify-self: end;
+}
+
+.ant-message.ant-message-top{
+    z-index: 9999;
 }

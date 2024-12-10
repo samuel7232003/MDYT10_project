@@ -1,7 +1,12 @@
 import { ReactNode, useEffect, useState } from 'react';
 import './mapseat.css'
+import { useAppDispatch, useAppSelector } from '../../redux/builder';
+import { setUser } from '../../redux/user/user.action';
 
 export default function MapSeat(){
+    const user = useAppSelector(state => state.user.user);
+    const dispatch = useAppDispatch();
+
     const [numRow, setNumRoll] = useState([""]);
     const [indexHover, setIndexHover] = useState<number|null>(20);
     const [sideHover, setSideHover] = useState<boolean|null>(null);
@@ -12,6 +17,14 @@ export default function MapSeat(){
     useEffect(() => {
         arrayFromAtoT();
     },[])
+
+    useEffect(() => {
+        dispatch(setUser({...user, listSeat: selectSeat}));
+    }, [selectSeat])
+
+    useEffect(() => {
+        setSelectSeat(user.listSeat);
+    }, [user]);
 
     function arrayFromAtoT() {
         let alphabet = [];
@@ -35,7 +48,6 @@ export default function MapSeat(){
         const check = selectSeat.find(index => index === seat);
         if(!check){
             setSelectSeat([...selectSeat, seat]);
-            console.log(seat);
         }
         else {
             const list = selectSeat.filter(index => index !== seat);
