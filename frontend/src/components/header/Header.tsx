@@ -54,7 +54,7 @@ export default function Header({curPage} :Props){
                 </nav>
             </div>
             <div className="header-right">
-                <p onClick={() => {navigate('./booking'); console.log("hehe")}}>MUA VÉ NGAY</p>
+                <p onClick={() => navigate('./booking')}>MUA VÉ NGAY</p>
             </div>
         </header>
     )

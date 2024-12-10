@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/builder'
 import { useEffect, useState } from 'react'
 import { setUser } from '../../redux/user/user.action'
 import { message } from 'antd'
+import { getPaymentUrl } from '../../services/PaymentServices'
 
 export default function FormBook(){
     const user = useAppSelector(state => state.user.user);
@@ -36,6 +37,17 @@ export default function FormBook(){
         else {
             console.log(userInfor);
             message.success("Thành công!");
+
+            const fetch = async () =>{
+                try {
+                    const res = await getPaymentUrl();
+                    window.open(res, '_blank');
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+            fetch();
         }
     }
 
