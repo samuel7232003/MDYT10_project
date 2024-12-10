@@ -12,6 +12,8 @@ const create_payment_url = async(req, res) => {
     const res_ =  await createPaymentUrl(
       req.body.amount,
       req.body.orderId,
+      req.body.orderDescription,
+      req.body.orderType,
       req.body.language,
       ipAddr,
     );

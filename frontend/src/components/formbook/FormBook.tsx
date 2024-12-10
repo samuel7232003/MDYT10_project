@@ -41,12 +41,12 @@ export default function FormBook(){
             const fetch = async () =>{
                 try {
                     const res = await getPaymentUrl();
+                    console.log(res);
                     window.open(res, '_blank');
                 } catch (error) {
                     console.log(error);
                 }
             }
-
             fetch();
         }
     }

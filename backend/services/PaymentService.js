@@ -9,50 +9,73 @@ function VnpCardType(num){
     else return 2
 }
 
+function formatDate(date, format){
+  const yyyymmdd = date.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+  const hhmmss = date.toTimeString().slice(0, 8).replace(/:/g, ''); // HHMMSS
+  return format === 'yyyymmddHHmmss' ? yyyymmdd + hhmmss : hhmmss;
+}
+
+function sortObject(obj) {
+  let sorted = {};
+  let str = [];
+  let key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      str.push(encodeURIComponent(key));
+    }
+  }
+  str.sort();
+  for (key = 0; key < str.length; key++) {
+    sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, '+');
+  }
+  return sorted;
+}
 const createPaymentUrl = async(
-    amount,
-    orderId,
-    language,
-    ipAddr,
-  ) => {
-    const tmnCode = process.env.VNP_TMNCODE;
-    const secretKey = process.env.VNP_HASHSECRET;
-    const vnpUrl = process.env.VNP_URL;
-    const returnUrl = process.env.VNP_RETURNURL;
+  amount,
+  orderId,
+  orderDescription,
+  orderType,
+  language,
+  ipAddr
+)=> {
+  const tmnCode = process.env.VNP_TMNCODE;
+  const secretKey = process.env.VNP_HASHSECRET;
+  const vnpUrl = process.env.VNP_URL;
+  let returnUrl = process.env.VNP_RETURNURL;
 
-    const date = new Date();
-    const createDate = formatDate(date, 'yyyymmddHHmmss');
-    const locale = language || 'vn';
-    const currCode = 'VND';
+  const date = new Date();
+  const createDate = formatDate(date, 'yyyymmddHHmmss');
+  const locale = language || 'vn';
+  const currCode = 'VND';
 
-    const vnp_Params = {
-      vnp_Version: '2.1.0',
-      vnp_Command: 'pay',
-      vnp_TmnCode: tmnCode,
-      vnp_Locale: locale,
-      vnp_CurrCode: currCode,
-      vnp_TxnRef: orderId,
-      vnp_Amount: (amount * 100).toString(),
-      vnp_ReturnUrl: returnUrl,
-      vnp_IpAddr: ipAddr,
-      vnp_CreateDate: createDate,
-    };
-    
+  const vnp_Params={
+    vnp_Version: '2.1.0',
+    vnp_Command: 'pay',
+    vnp_TmnCode: tmnCode,
+    vnp_Locale: locale,
+    vnp_CurrCode: currCode,
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: orderDescription,
+    vnp_OrderType: orderType,
+    vnp_Amount: (amount * 100).toString(),
+    vnp_ReturnUrl: returnUrl,
+    vnp_IpAddr: ipAddr,
+    vnp_CreateDate: createDate,
+  };
+  console.log('3');
 
-    const sortedParams = sortObject(vnp_Params);
-    
-    // Sign the data
-    const signData = querystring.stringify(sortedParams, { encode: false });
-    const hmac = crypto.createHmac('sha512', secretKey);
-    const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
-    sortedParams['vnp_SecureHash'] = signed;
-    
+  const sortedParams = sortObject(vnp_Params);
 
-    // Create the URL
-    const res= `${vnpUrl}?${querystring.stringify(sortedParams, { encode: false })}`;
+  // Sign the data
+  const signData = querystring.stringify(sortedParams, { encode: false });
+  const hmac = crypto.createHmac('sha512', secretKey);
+  const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
+  sortedParams['vnp_SecureHash'] = signed;
 
+  // Create the URL
+  const res = `${vnpUrl}?${querystring.stringify(sortedParams, { encode: false })}`;
 
-    return res;
+  return res;
 }
 
 const vnpayIpn = async (reqQuery) => {
