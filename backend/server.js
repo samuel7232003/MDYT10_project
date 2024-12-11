@@ -198,7 +198,7 @@ app.post("/payment-status", (req, res) => {
   function isValidData(data, currentSignature, checksumKey) {
       const sortedDataByKey = sortObjDataByKey(data);
       const dataQueryStr = convertObjToQueryStr(sortedDataByKey);
-      const dataToSignature = createHmac("sha256", checksumKey)
+      const dataToSignature = crypto.createHmac("sha256", checksumKey)
         .update(dataQueryStr)
         .digest("hex");
       return dataToSignature == currentSignature;
