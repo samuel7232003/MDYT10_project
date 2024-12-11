@@ -5,6 +5,7 @@ const PayOS = require("@payos/node");
 const billModel = require("./models/Bill");
 const connectDB = require('./config/database');
 const ticketModel = require("./models/Ticket");
+const crypto = require("crypto");
 
 const app = express();
 
@@ -140,10 +141,10 @@ app.post("/payment-status", (req, res) => {
     const status = webhookData.status;  // Trạng thái thanh toán (thành công, thất bại, v.v...)
     const signature = webhookData.signature;  // Chữ ký dùng để xác thực thông báo
 
-    console.log(req);
+    console.log(webhookData);
   
     // Kiểm tra chữ ký để xác thực nguồn gốc của thông báo (thông thường sẽ dùng một thuật toán mã hóa như HMAC SHA256)
-    const isValid = verifyWebhookSignature(webhookData, signature);
+    const isValid = isValidData(webhookData.data, webhookData.signature, process.env.PAYOS_CHECKSUM_KEY);
   
     if (!isValid) {
       console.log("Webhook signature verification failed");
@@ -162,25 +163,46 @@ app.post("/payment-status", (req, res) => {
     res.status(200).send("Received successfully");
   });
   
-  const crypto = require("crypto");
 
-  // Tạo chữ ký từ dữ liệu JSON nhận được
-  function generateSignature(data) {
-    const hmac = crypto.createHmac("sha256", process.env.PAYOS_CHECKSUM_KEY);  // Sử dụng PAYOS_SECRET trong môi trường
-    hmac.update(data);  // Cập nhật dữ liệu vào hmac
-    return hmac.digest("hex");  // Trả về chữ ký dưới dạng hex
+
+
+  function sortObjDataByKey(object) {
+    const orderedObject = Object.keys(object)
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = object[key];
+        return obj;
+      }, {});
+    return orderedObject;
   }
-  
-  // Xác minh chữ ký Webhook
-  function verifyWebhookSignature(data, receivedSignature) {
-    const dataToVerify = JSON.stringify(data);  // Chuyển dữ liệu nhận được thành chuỗi JSON
-    const expectedSignature = generateSignature(dataToVerify);  // Tính toán chữ ký từ dữ liệu
-  
-    console.log("Expected Signature: ", expectedSignature);  // Ghi log chữ ký tính toán được
-    console.log("Received Signature: ", receivedSignature);  // Ghi log chữ ký nhận được
-  
-    return receivedSignature === "96dabfc35848a0da0f814997e12323a52e09ec86a8ed93abf73ca7137ebfbf8f";  // So sánh chữ ký nhận được và chữ ký tính toán
+
+  function convertObjToQueryStr(object) {
+    return Object.keys(object)
+      .filter((key) => object[key] !== undefined)
+      .map((key) => {
+        let value = object[key];
+        // Sort nested object
+        if (value && Array.isArray(value)) {
+          value = JSON.stringify(value.map((val) => sortObjDataByKey(val)));
+        }
+        // Set empty string if null
+        if ([null, undefined, "undefined", "null"].includes(value)) {
+          value = "";
+        }
+
+        return `${key}=${value}`;
+      })
+      .join("&");
   }
+
+  function isValidData(data, currentSignature, checksumKey) {
+      const sortedDataByKey = sortObjDataByKey(data);
+      const dataQueryStr = convertObjToQueryStr(sortedDataByKey);
+      const dataToSignature = createHmac("sha256", checksumKey)
+        .update(dataQueryStr)
+        .digest("hex");
+      return dataToSignature == currentSignature;
+    }
 
 const startServer = async () => {
     try {
