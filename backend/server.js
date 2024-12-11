@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.post("/create-embedded-payment-link", async (req, res) => {
 
-  const YOUR_DOMAIN = `http://localhost:3000`;
+  const YOUR_DOMAIN = process.env.DOMAIN;
   const body = {
     orderCode: Number(String(Date.now()).slice(-6)),
     amount: req.body.amount,
