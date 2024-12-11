@@ -162,21 +162,25 @@ app.post("/payment-status", (req, res) => {
     res.status(200).send("Received successfully");
   });
   
-  // Hàm xác thực chữ ký của Webhook
-  function verifyWebhookSignature(data, receivedSignature) {
-    const dataToVerify = JSON.stringify(data);
-    const expectedSignature = generateSignature(dataToVerify);
-  
-    return receivedSignature === expectedSignature;
+  const crypto = require("crypto");
+
+  // Tạo chữ ký từ dữ liệu JSON nhận được
+  function generateSignature(data) {
+    const hmac = crypto.createHmac("sha256", process.env.PAYOS_CHECKSUM_KEY);  // Sử dụng PAYOS_SECRET trong môi trường
+    hmac.update(data);  // Cập nhật dữ liệu vào hmac
+    return hmac.digest("hex");  // Trả về chữ ký dưới dạng hex
   }
   
-  // Hàm tạo chữ ký từ dữ liệu
-  function generateSignature(data) {
-    const crypto = require("crypto");
-    const hmac = crypto.createHmac("sha256", process.env.PAYOS_CHECKSUM_KEY);
-    hmac.update(data);
-    return hmac.digest("hex");
-}
+  // Xác minh chữ ký Webhook
+  function verifyWebhookSignature(data, receivedSignature) {
+    const dataToVerify = JSON.stringify(data);  // Chuyển dữ liệu nhận được thành chuỗi JSON
+    const expectedSignature = generateSignature(dataToVerify);  // Tính toán chữ ký từ dữ liệu
+  
+    console.log("Expected Signature: ", expectedSignature);  // Ghi log chữ ký tính toán được
+    console.log("Received Signature: ", receivedSignature);  // Ghi log chữ ký nhận được
+  
+    return receivedSignature === expectedSignature;  // So sánh chữ ký nhận được và chữ ký tính toán
+  }
 
 const startServer = async () => {
     try {
