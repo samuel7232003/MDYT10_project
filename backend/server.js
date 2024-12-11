@@ -1,42 +1,133 @@
-require('dotenv').config();
-const express = require('express');
-const configViewEngine = require('./config/viewEngine');
-const apiRoutes = require('./routes/api');
-// const connection = require('./config/database');
-const cors = require('cors');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const PayOS = require("@payos/node");
+const billModel = require("./models/Bill");
+const connectDB = require('./config/database');
+const ticketModel = require("./models/Ticket");
 
 const app = express();
-const port = process.env.PORT || 3001;
 
-const http = require("http");
-const server = http.createServer(app);
+dotenv.config();
+const payOS = new PayOS(
+  process.env.PAYOS_CLIENT_ID,
+  process.env.PAYOS_API_KEY,
+  process.env.PAYOS_CHECKSUM_KEY
+);
 
-const socketIo = require("socket.io")(server, {
-    cors: {
-        origin: "*",
-    }
-}); 
+const port = process.env.PORT
 
-//config cors
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-//config req.body
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.post("/create-embedded-payment-link", async (req, res) => {
 
-//config template engine
-configViewEngine(app);
+  const YOUR_DOMAIN = `http://localhost:3000`;
+  const body = {
+    orderCode: Number(String(Date.now()).slice(-6)),
+    amount: req.body.amount,
+    description: "Thanh toan don hang",
+    infor: {
+        name: req.body.name,
+        phone: req.body.phone,
+        email: req.body.email,
+        listSeat: req.body.listSeat,
+    },
+    returnUrl: `${YOUR_DOMAIN}`,
+    cancelUrl: `${YOUR_DOMAIN}`,
+  };
 
-app.use('/', apiRoutes);
+  try {
+    const paymentLinkResponse = await payOS.createPaymentLink(body);
 
-(async () => {
+    res.send(paymentLinkResponse)
+  } catch (error) {
+    console.error(error);
+    res.send("Something went error");
+  }
+})
+
+app.post("/setBill", async (req, res) =>{
     try {
-        // await connection();
-
-        server.listen(port, () => {
-            console.log(`Backend Nodejs App listening on port ${port}`)
+        const res = await billModel.create({
+            idBill:req.body.idBill,
+            name:req.body.name,
+            phone:req.body.phone,
+            email:req.body.email,
+            amount: req.body.amount,
+            address: req.body.address
         })
+        return res;
     } catch (error) {
-        console.log(">>> Error connect tp DB: ", error)
+        return null;
     }
-})()
+})
+
+app.post("/setTiket", async (req, res) => { 
+    try{
+        const list= req.body.listSeat;
+        const tickets = list.map(seat => ({
+          name: req.body.name,
+          phone: req.body.phone,
+          email: req.body.email,
+          idBill: req.body.idBill,
+          seat: seat,
+          status: "PENDING",
+          isActive: "NONE"
+      }));
+      
+      await ticketModel.insertMany(tickets);
+
+        return res;
+    } catch(error){
+        return null;
+    }
+})
+
+app.get("/getSeat", async(req, res) => {
+    try {
+        const responce = await ticketModel.find();
+        res.json({data: responce});
+    } catch (error) {
+      return null;
+    }
+})
+
+app.get("/doneBill", async (req, res) => {
+    const {idBill} = req.query;
+    try {
+        const responce = await ticketModel.updateMany(
+            {idBill: idBill},
+            { $set: {status: "DONE"}}
+        )
+        return responce;
+    } catch (error) {
+        return null
+    }
+})
+
+app.get("/deleteBill", async(req, res) => {
+    const {idBill} = req.query;
+    try {
+        const res_ = await ticketModel.deleteMany({idBill: idBill, status: "PENDING"});
+        return res_;
+    } catch (error) {
+        return null;
+    }
+})
+
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(port, () => {
+            console.log(`Backend Nodejs App listening on port ${port}`);
+        });
+
+    } catch (error) {
+        console.log(">>> Error connecting to DB:", error);
+    }
+};
+
+startServer();

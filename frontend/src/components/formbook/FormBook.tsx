@@ -9,11 +9,31 @@ import { useAppDispatch, useAppSelector } from '../../redux/builder'
 import { useEffect, useState } from 'react'
 import { setUser } from '../../redux/user/user.action'
 import { message } from 'antd'
-import { getPaymentUrl } from '../../services/PaymentServices'
+import { PayOSConfig, usePayOS } from "@payos/payos-checkout";
+import { doPayment, saveDataBill, saveDataSeat, setDone, setFail } from '../../services/PaymentServices'
+import check_done from './images/Check_round_fill.png'
+import { getListSeat } from '../../redux/seat/seat.action'
 
 export default function FormBook(){
     const user = useAppSelector(state => state.user.user);
+    const listSeatBook = useAppSelector(state => state.seat.listSeat);
     const dispatch = useAppDispatch();
+    const [isOpen, setIsOpen] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [waitOpenLink, setWaitOpenLink] = useState(false);
+
+    const [payOSConfig, setPayOSConfig] = useState<PayOSConfig>({
+        RETURN_URL: window.location.origin, 
+        ELEMENT_ID: "embedded-payment-container",
+        CHECKOUT_URL: "",
+        embedded: true,
+        onSuccess: (e:any) => {
+            setIsSuccess(true);
+            message.success("Thanh toán thành công!");
+        },
+    });
+
+    const { open, exit } = usePayOS(payOSConfig);
 
     const [userInfor, setUserInfor] = useState(user);
 
@@ -21,40 +41,152 @@ export default function FormBook(){
         setUserInfor({...userInfor, listSeat: user.listSeat});
     }, [user.listSeat])
 
-    function handleChange(type: string, value: string){
-        setUserInfor({...userInfor, [type]: value.trim()});
-    }
+    useEffect(() => {
+        if (payOSConfig.CHECKOUT_URL && isOpen) open();
+    }, [payOSConfig]);
 
-    function handleRemove(seat :string){
-        const list = userInfor.listSeat.filter(index => index !== seat);
-        dispatch(setUser({...user, listSeat: list}));
-    }
-
-    function handleSave(){
-        if(userInfor.phone === "") message.error("Không được bỏ trống số điện thoại!");
-        else if (userInfor.email === "") message.error("Không được bỏ trống email!");
-        else if (userInfor.listSeat.length === 0) message.error("Bạn chưa chọn vị trí xem nào!");
-        else {
-            console.log(userInfor);
-            message.success("Thành công!");
-
-            const fetch = async () =>{
+    useEffect(() => {
+        if(isOpen === false){
+            const setFailBill = async(id_: string)=>{
                 try {
-                    const res = await getPaymentUrl();
-                    console.log(res);
-                    window.open(res, '_blank');
+                    await setFail(id_);
                 } catch (error) {
                     console.log(error);
                 }
             }
-            fetch();
+            
+            const id_ = localStorage.getItem("idBill");
+            if(id_) {
+                setFailBill(id_);
+                dispatch(setUser({...userInfor, listSeat: []}));
+                localStorage.removeItem("idBill");
+            }
         }
+    },[isOpen])
+
+    useEffect(() => {
+        if(isSuccess === true){
+            const id_ = localStorage.getItem("idBill");
+            if(id_){
+                const setDoneBill = async (id_:string) => {
+                    try {
+                        await setDone(id_);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                setDoneBill(id_);
+                const fetchData = async ()=>{
+                    try {
+                        await saveDataBill(userInfor, id_);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                fetchData();
+                localStorage.removeItem("idBill");
+            }
+        }
+    },[isSuccess]);
+
+    useEffect(()=>{ //b3 khi du lieu moi nhat ve thi kiem tra 
+        if(waitOpenLink === true){
+            setWaitOpenLink(false);
+            let check = true;
+            let listRemove:string[] = [];
+            for(let i = 0; i< userInfor.listSeat.length; i++){
+                const seat = listSeatBook.find(index => index.name === userInfor.listSeat[i]);
+                if(seat){
+                    message.error("Vị trí " + seat.name + " đã được đặt, vui lòng chọn vị trí khác!");
+                    check = false;
+                    listRemove.push(seat.name);
+                }
+            }
+            const newList = userInfor.listSeat.filter(item => !listRemove.includes(item));
+            dispatch(setUser({...userInfor, listSeat: newList}));
+            if(check === true){
+                handleSave();  
+            }
+        }
+    },[listSeatBook])
+
+    function handleChange(type: string, value: string){ 
+        setUserInfor({...userInfor, [type]: value});
+    }
+
+    function handleRemove(seat :string){
+        const list = userInfor.listSeat.filter(index => index !== seat);
+        dispatch(setUser({...userInfor, listSeat: list}));
+    }
+
+    function checkStill(){  //b2 goi du lieu moi nhat
+        setWaitOpenLink(true);
+        const fetchDataSeat = async()=>{
+            try {
+                await dispatch(getListSeat());
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchDataSeat();
+    }
+
+    function handleSave(){ //b4 kiem tra khong co moi thuc hien tiep
+        if(userInfor.phone.trim() === "") message.error("Không được bỏ trống số điện thoại!");
+        else if (userInfor.email.trim() === "") message.error("Không được bỏ trống email!");
+        else if (userInfor.address.trim() === "") message.error("Không được bỏ trống địa chỉ nhận vé!");
+        else if (userInfor.listSeat.length === 0) message.error("Bạn chưa chọn vị trí xem nào!");
+        else {
+            message.loading("Thực hiện thanh toán...");
+            handleGetPaymentLink();
+        }
+    }
+
+    const handleGetPaymentLink = async () => { //b5 khi da validate xong
+        exit();
+
+        const response = await doPayment(userInfor);
+
+        setPayOSConfig((oldConfig) => ({
+            ...oldConfig,
+            CHECKOUT_URL: response.checkoutUrl,
+        }));
+
+        localStorage.setItem("idBill", response.orderCode);
+
+        const fetchData = async ()=>{
+            try {
+                await saveDataSeat(userInfor, response.orderCode);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchData();
+
+        setIsOpen(true);
+    };
+
+    function handleBack(){
+        dispatch(setUser({...userInfor, listSeat: []}));
+        setIsOpen(false);
+        setIsSuccess(false);
+    }
+
+    function test(){
+        const fetchData = async ()=>{
+            try {
+                await saveDataBill(userInfor, "123");
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchData();
     }
 
     return(
         <div className="formbook">
             <div className='infor'>
-                <p className="title">Đêm nhạc gây quỹ<br/><i>“Mùa Đông Yêu Thương 10”</i></p>
+                <p className="title" onClick={test}>Đêm nhạc gây quỹ<br/><i>“Mùa Đông Yêu Thương 10”</i></p>
                 <div className="detail">
                     <div className="item">
                         <figure><img src={time_icon} alt="" /></figure>
@@ -73,25 +205,30 @@ export default function FormBook(){
                     </div>
                 </div>
             </div>
-            <div className="form">
-                <p className="title">Thông tin đặt vé</p>
-                <div className='detail'>
+            {!isSuccess ? <div className="form">
+                 <p className="title">Thông tin đặt vé</p>
+                {!isOpen && <div className='detail'>
                     <div className='item'>
                         <figure><img src={name_icon} alt="" /></figure>
                         <p className='sub-title'>Họ và tên:</p>
-                        <fieldset><input type="text" onChange={e => handleChange("name", e.target.value)} /></fieldset>
+                        <fieldset><input value={userInfor.name} type="text" onChange={e => handleChange("name", e.target.value)} /></fieldset>
                     </div>
                     <div className='item'>
                         <figure><img src={phone_icon} alt="" /></figure>
                         <p className='sub-title'>Số điện thoại*:</p>
-                        <fieldset><input type="tel" onChange={e => handleChange("phone", e.target.value)} /></fieldset>
+                        <fieldset><input value={userInfor.phone} type="tel" onChange={e => handleChange("phone", e.target.value)} /></fieldset>
                     </div>
                     <div className='item'>
                         <figure><img src={email_icon} alt="" /></figure>
                         <p className='sub-title'>Email*:</p>
-                        <fieldset><input type="email" onChange={e => handleChange("email", e.target.value)}/></fieldset>
+                        <fieldset><input value={userInfor.email} type="email" onChange={e => handleChange("email", e.target.value)}/></fieldset>
                     </div>
                     <p className='note'><b>*Lưu ý:</b> Chúng mình sẽ gửi vé qua địa chỉ email của bạn, hãy nhập chính xác và kiểm tra lại trước khi đặt nhé!</p>
+                    <div className='item'>
+                        <figure><img src={email_icon} alt="" /></figure>
+                        <p className='sub-title'>Địa chỉ nhận*:</p>
+                        <fieldset><input value={userInfor.address} type="text" onChange={e => handleChange("address", e.target.value)}/></fieldset>
+                    </div>
                     <div className='item'>
                         <figure><img src={price_icon} alt="" /></figure>
                         <p className='sub-title'>Vị trí đã chọn*:</p>
@@ -100,9 +237,20 @@ export default function FormBook(){
                         </div>
                     </div>
                     <p className='note'>*Bạn hãy chọn trực tiếp những vị trí trên sơ đồ.</p>
-                </div>
-                <p className='btn-submit' onClick={handleSave}>Thanh toán</p>
-            </div>
+                </div>}
+                {!isOpen ? <p className='btn-submit' onClick={checkStill}>Thanh toán</p> //b1
+                :<div>
+                    <div id="embedded-payment-container" style={{height: "328px"}}></div>
+                    <p className='back-btn' onClick={() => {setIsOpen(false); exit();}}>Trở lại</p>
+                </div>}
+            </div>:
+            <div className="form done">
+                <figure><img src={check_done} alt="" /></figure>
+                <p className='message'>Xin chân thành cảm ơn bạn đã ủng hộ dự án của chúng mình! Vé sẽ được gửi qua địa chỉ mail 
+                    <b>{userInfor.email}</b> trong thời gian sớm nhất.
+                </p>
+                <p className='back-btn' onClick={handleBack}>Trở lại</p>
+            </div>}
         </div>
     )
 }

@@ -3,7 +3,7 @@ import { Seat, SeatModel } from "./seat.state";
 
 export const initialSeatState:SeatModel = {
     seat: {
-        _id: "",
+        idTicket: "",
         name: "",
         status: "NONE"
     },

@@ -8,6 +8,7 @@
     border-radius: 8px;
     color: white;
     padding: 15px 30px;
+    position: relative;
 }
 
 .formbook .infor{
@@ -142,8 +143,46 @@
     font-weight: bold;
     border-radius: 8px;
     justify-self: end;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.25s;
+}
+
+.formbook .btn-submit:hover{
+    background-color: #1b8b93;
 }
 
 .ant-message.ant-message-top{
     z-index: 9999;
+}
+
+.formbook .form .back-btn{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 10px;
+    border-radius: 8px;
+    background-color: rgba(255, 0, 0, 0.485);
+    color: white;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.25s;
+}
+
+.formbook .form.done{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    min-height: 350px;
+}
+
+.formbook .form.done .message{
+    color: black;
+    font-style: italic;
+    line-height: 1.2;
+}
+
+.formbook .form .back-btn:hover{
+    background-color: red;
 }

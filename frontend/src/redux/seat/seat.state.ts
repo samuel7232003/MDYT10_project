@@ -1,5 +1,5 @@
 export interface Seat{
-    _id: string;
+    idTicket: string;
     name: string;
     status: "NONE" | "DONE" | "PENDING";
 }

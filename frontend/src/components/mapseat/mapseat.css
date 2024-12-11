@@ -113,10 +113,6 @@
     overflow: hidden;
 }
 
-.mapseat .main .list-row .row .rowseat .seat:hover{
-    background-color: #d6e40f  !important;
-}
-
 .mapseat .note{
     display: flex;
     justify-content: space-around;

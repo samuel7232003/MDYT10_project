@@ -2,9 +2,12 @@ import { ReactNode, useEffect, useState } from 'react';
 import './mapseat.css'
 import { useAppDispatch, useAppSelector } from '../../redux/builder';
 import { setUser } from '../../redux/user/user.action';
+import { getListSeat } from '../../redux/seat/seat.action';
+import { message } from 'antd';
 
 export default function MapSeat(){
     const user = useAppSelector(state => state.user.user);
+    const listSeat = useAppSelector(state => state.seat.listSeat);
     const dispatch = useAppDispatch();
 
     const [numRow, setNumRoll] = useState([""]);
@@ -14,8 +17,17 @@ export default function MapSeat(){
     const numColLeft = 14;
     const numColRight = 16;
 
+    const fetchDataSeat = async()=>{
+        try {
+            await dispatch(getListSeat());
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         arrayFromAtoT();
+        fetchDataSeat();
     },[])
 
     useEffect(() => {
@@ -41,17 +53,25 @@ export default function MapSeat(){
     }
 
     function handleChoice(side: boolean, index: number, row: string){
+        fetchDataSeat();
         let col = side ? index+1 : index+15;
         let seat = "";
         if(col<10) seat = row+"0"+col;
         else seat = row+col
-        const check = selectSeat.find(index => index === seat);
-        if(!check){
-            setSelectSeat([...selectSeat, seat]);
+        const seat_ = listSeat.find(index_ => index_.name === seat);
+        if(seat_) {
+            if(seat_.status === "DONE") message.error("Vị trí này đã được đặt, vui lòng chọn vị trí khác!"); //check order
+            if(seat_.status === "PENDING") message.error("Vị trí này đang được giữ để chờ thanh toán!");
         }
-        else {
-            const list = selectSeat.filter(index => index !== seat);
-            setSelectSeat([...list]);
+        else{
+            const check = selectSeat.find(index => index === seat);
+            if(!check){
+                setSelectSeat([...selectSeat, seat]);
+            }
+            else {
+                const list = selectSeat.filter(index => index !== seat);
+                setSelectSeat([...list]);
+            }
         }
     }
 
@@ -60,9 +80,16 @@ export default function MapSeat(){
         let seat = "";
         if(col<10) seat = row+"0"+col;
         else seat = row+col;
-        if(selectSeat.find(index => index === seat)) return {backgroundColor:"#26BEC8"};
-        if(side === sideHover && index === indexHover) return {backgroundColor:"#198c07"};
-        else return undefined;
+        const seat_ = listSeat.find(index_ => index_.name === seat);
+        if(seat_) {
+            if(seat_.status === "DONE") return {backgroundColor: "#D9D9D9"}; //check order
+            if(seat_.status === "PENDING") return {backgroundColor: "#d6e40f"}
+        }
+        else{
+            if(selectSeat.find(index => index === seat)) return {backgroundColor:"#26BEC8"};
+            if(side === sideHover && index === indexHover) return {backgroundColor:"#198c07"};
+            else return undefined;
+        }
     }
 
     function createList (num:number, row: string):ReactNode{

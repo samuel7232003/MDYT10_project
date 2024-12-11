@@ -7,6 +7,7 @@ export const initialUserState:UserModel = {
         name: "",
         phone: "",
         email: "",
+        address: "",
         listSeat: []
     }
 }
