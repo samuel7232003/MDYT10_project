@@ -139,6 +139,8 @@ app.post("/payment-status", (req, res) => {
     const orderCode = webhookData.orderCode;  // Mã đơn hàng
     const status = webhookData.status;  // Trạng thái thanh toán (thành công, thất bại, v.v...)
     const signature = webhookData.signature;  // Chữ ký dùng để xác thực thông báo
+
+    console.log(req);
   
     // Kiểm tra chữ ký để xác thực nguồn gốc của thông báo (thông thường sẽ dùng một thuật toán mã hóa như HMAC SHA256)
     const isValid = verifyWebhookSignature(webhookData, signature);
