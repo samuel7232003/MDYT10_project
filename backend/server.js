@@ -37,7 +37,9 @@ app.post("/create-embedded-payment-link", async (req, res) => {
     },
     returnUrl: `${YOUR_DOMAIN}`,
     cancelUrl: `${YOUR_DOMAIN}`,
+    expiredAt: Math.floor((Date.now() + 10000)/1000)
   };
+
 
   try {
     const paymentLinkResponse = await payOS.createPaymentLink(body);
@@ -47,23 +49,6 @@ app.post("/create-embedded-payment-link", async (req, res) => {
     res.send("Something went error");
   }
 })
-
-app.get("/check-payment-status", async (req, res) => {
-    const orderCode = req.query.orderCode;
-  
-    try {
-      const paymentStatus = await payOS.checkPaymentStatus(orderCode);
-  
-      if (paymentStatus.status === 'SUCCESS') {
-        res.send("Giao dịch thành công");
-      } else {
-        res.send("Giao dịch thất bại");
-      }
-    } catch (error) {
-      console.error(error);
-      res.send("Không thể kiểm tra trạng thái giao dịch");
-    }
-});
 
 app.post("/setBill", async (req, res) =>{
     try {
@@ -136,10 +121,9 @@ app.get("/deleteBill", async(req, res) => {
 
 
 app.post("/payment-status", (req, res) => {
-    const webhookData = req.body;  // Dữ liệu webhook gửi đến từ PayOS
-    const orderCode = webhookData.orderCode;  // Mã đơn hàng
-    const status = webhookData.status;  // Trạng thái thanh toán (thành công, thất bại, v.v...)
-    const signature = webhookData.signature;  // Chữ ký dùng để xác thực thông báo
+    const webhookData = req.body; 
+    const orderCode = webhookData.data.orderCode; 
+    const status = webhookData.desc;  
 
     console.log(webhookData);
   
@@ -152,9 +136,9 @@ app.post("/payment-status", (req, res) => {
     }
   
     // Kiểm tra trạng thái giao dịch
-    if (status === "SUCCESS") {
-      console.log(`Giao dịch ${orderCode} thành công`);
-      // Cập nhật trạng thái giao dịch vào cơ sở dữ liệu
+    if (status === "success") {
+        console.log(`Giao dịch ${orderCode} thành công`);
+
     } else {
       console.log(`Giao dịch ${orderCode} thất bại`);
       // Cập nhật trạng thái giao dịch vào cơ sở dữ liệu
@@ -163,9 +147,6 @@ app.post("/payment-status", (req, res) => {
     res.status(200).send("Received successfully");
   });
   
-
-
-
   function sortObjDataByKey(object) {
     const orderedObject = Object.keys(object)
       .sort()
