@@ -14,12 +14,14 @@ export default function MapSeat(){
     const [indexHover, setIndexHover] = useState<number|null>(20);
     const [sideHover, setSideHover] = useState<boolean|null>(null);
     const [selectSeat, setSelectSeat] = useState<string[]>([]);
+    const [fecthData, setFetchData] = useState(false);
     const numColLeft = 14;
     const numColRight = 16;
 
     const fetchDataSeat = async()=>{
         try {
             await dispatch(getListSeat());
+            setFetchData(true);
         } catch (error) {
             console.log(error);
         }
@@ -127,7 +129,7 @@ export default function MapSeat(){
     }
 
     return(
-        <div className="mapseat">
+        fecthData ? <div className="mapseat">
             <p className="title">Sơ đồ ghế ngồi đêm nhạc “Mùa Đông Yêu Thương 10”</p>
             <div className="main">
                 <div className="stage">
@@ -165,5 +167,6 @@ export default function MapSeat(){
                 </div>
             </div>
         </div>
+        :<div className="mapseat"></div>
     )
 }

@@ -154,7 +154,7 @@ export default function FormBook(){
     //Bước 5_(3): Khi đóng link thì xóa dữ liệu bill trong data, xóa idBill, quay lại bước 0
     function handleCloseLink(){
         exit(); 
-        setIsOpen(false);
+        setIsOpen(false);   
         const setFailBill = async(id_: string)=>{
             try {
                 await setFail(id_);
