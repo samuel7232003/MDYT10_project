@@ -9,7 +9,7 @@ const createPaymaentUrl = async(req, res)=>{
     const body = {
         orderCode: Number(String(Date.now()).slice(-6)),
         amount: req.body.amount,
-        description: "Thanh toan don hang",
+        description: req.body.phone+" Thanh toan don hang",
         infor: {
             name: req.body.name,
             phone: req.body.phone,
@@ -18,7 +18,7 @@ const createPaymaentUrl = async(req, res)=>{
         },
         returnUrl: `${YOUR_DOMAIN}`,
         cancelUrl: `${YOUR_DOMAIN}`,
-        expiredAt: Math.floor((Date.now() + 15000)/1000)
+        expiredAt: Math.floor((Date.now() + 30000)/1000)
     };
 
     try {
