@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { setUser } from '../../redux/user/user.action'
 import { message } from 'antd'
 import { PayOSConfig, usePayOS } from "@payos/payos-checkout";
-import { doPayment, saveDataBill, saveDataSeat, setDone, setFail } from '../../services/PaymentServices'
+import { doPayment, savePending, setFail } from '../../services/PaymentServices'
 import check_done from './images/Check_round_fill.png'
 import { getListSeat } from '../../redux/seat/seat.action'
 
@@ -18,78 +18,31 @@ export default function FormBook(){
     const user = useAppSelector(state => state.user.user);
     const listSeatBook = useAppSelector(state => state.seat.listSeat);
     const dispatch = useAppDispatch();
+
+    const [userInfor, setUserInfor] = useState(user);
+    const [idBill, setIdBill] = useState("");
+
     const [isOpen, setIsOpen] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [waitOpenLink, setWaitOpenLink] = useState(false);
-
     const [payOSConfig, setPayOSConfig] = useState<PayOSConfig>({
         RETURN_URL: window.location.origin, 
         ELEMENT_ID: "embedded-payment-container",
         CHECKOUT_URL: "",
         embedded: true,
-        onSuccess: (e:any) => {
-            setIsSuccess(true);
-            message.success("Thanh toán thành công!");
-        },
+        onSuccess: (e:any) => {handleSuccess()},
+        onExit: (e:any) => {handleTimeOut()},
     });
-
     const { open, exit } = usePayOS(payOSConfig);
 
-    const [userInfor, setUserInfor] = useState(user);
-
+    //Update ListSeat
     useEffect(() => {
         setUserInfor({...userInfor, listSeat: user.listSeat});
-    }, [user.listSeat])
+        // eslint-disable-next-line
+    }, [user.listSeat]);
 
-    useEffect(() => {
-        if (payOSConfig.CHECKOUT_URL && isOpen) open();
-    }, [payOSConfig]);
-
-    useEffect(() => {
-        if(isOpen === false){
-            const setFailBill = async(id_: string)=>{
-                try {
-                    await setFail(id_);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            
-            const id_ = localStorage.getItem("idBill");
-            if(id_) {
-                setFailBill(id_);
-                dispatch(setUser({...userInfor, listSeat: []}));
-                localStorage.removeItem("idBill");
-            }
-        }
-    },[isOpen])
-
-    useEffect(() => {
-        if(isSuccess === true){
-            const id_ = localStorage.getItem("idBill");
-            if(id_){
-                const setDoneBill = async (id_:string) => {
-                    try {
-                        await setDone(id_);
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-                setDoneBill(id_);
-                const fetchData = async ()=>{
-                    try {
-                        await saveDataBill(userInfor, id_);
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-                fetchData();
-                localStorage.removeItem("idBill");
-            }
-        }
-    },[isSuccess]);
-
-    useEffect(()=>{ //b3 khi du lieu moi nhat ve thi kiem tra 
+    //Buoc 2: Khi dữ liệu về, thì kiểm tra nếu okie thì lấy link payment
+    useEffect(()=>{
         if(waitOpenLink === true){
             setWaitOpenLink(false);
             let check = true;
@@ -104,11 +57,90 @@ export default function FormBook(){
             }
             const newList = userInfor.listSeat.filter(item => !listRemove.includes(item));
             dispatch(setUser({...userInfor, listSeat: newList}));
+
             if(check === true){
-                handleSave();  
+                message.loading("Thực hiện thanh toán...");
+                handleGetPaymentLink();
             }
         }
+        // eslint-disable-next-line
     },[listSeatBook])
+
+    //Bước 4: Kiểm tra đã có link checkout chưa mới mở linklink
+    useEffect(() => {
+        if (payOSConfig.CHECKOUT_URL && isOpen) open();
+        // eslint-disable-next-line
+    }, [payOSConfig]);
+
+    //Buoc 1: Validate & kiem tra du lieu moi nhat
+    function checkStill(){
+        if(userInfor.phone.trim() === "") message.error("Không được bỏ trống số điện thoại!");
+        else if (userInfor.email.trim() === "") message.error("Không được bỏ trống email!");
+        else if (userInfor.address.trim() === "") message.error("Không được bỏ trống địa chỉ nhận vé!");
+        else if (userInfor.listSeat.length === 0) message.error("Bạn chưa chọn vị trí xem nào!");
+        else {
+            setWaitOpenLink(true);
+            fetchDataSeat();
+        }
+    }
+
+    //Bước 3: Lấy link thanh toán, lưu idBill, cập nhật Pending cho danh sách ghế, mở link thanh toán.
+    const handleGetPaymentLink = async () => {
+        const response = await doPayment(userInfor);
+        setIsOpen(true);
+        setPayOSConfig((oldConfig) => ({
+            ...oldConfig,
+            CHECKOUT_URL: response.checkoutUrl,
+        }));
+
+        setIdBill(response.orderCode);
+        localStorage.setItem("idBill", response.orderCode);
+        const fetchData = async ()=>{
+            try {
+                await savePending(userInfor, response.orderCode);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchData();
+    };
+
+    //Bước 5_(1): Khi hệ thống nhận thấy đã thanh toán thành công, xóa idBill, chuyển giao diện thành công!
+    function handleSuccess(){
+        message.success("Thanh toán thành công!");
+        setIdBill("");
+        dispatch(setUser({...userInfor, listSeat: []}));
+        setIsOpen(false);
+        setIsSuccess(true);
+    }
+
+    //Bước 5_(2): Khi quá thời gian 3 phút, reset dữ liệu tương tự 5_(3) quay lại bước 0
+    function handleTimeOut(){
+        message.error("Hết thời gian chờ thanh toán!");
+        setIsOpen(false);
+        const setFailBill = async(id_: string)=>{
+            try {
+                await setFail(id_);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        const id = localStorage.getItem("idBill");
+        console.log(idBill);
+        console.log(id);
+        if(id) setFailBill(id);
+        dispatch(setUser({...userInfor, listSeat: []}));
+        setIdBill("");
+        fetchDataSeat();
+    }
+
+    const fetchDataSeat = async()=>{
+        try {
+            await dispatch(getListSeat());
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     function handleChange(type: string, value: string){ 
         setUserInfor({...userInfor, [type]: value});
@@ -119,74 +151,34 @@ export default function FormBook(){
         dispatch(setUser({...userInfor, listSeat: list}));
     }
 
-    function checkStill(){  //b2 goi du lieu moi nhat
-        setWaitOpenLink(true);
-        const fetchDataSeat = async()=>{
+    //Bước 5_(3): Khi đóng link thì xóa dữ liệu bill trong data, xóa idBill, quay lại bước 0
+    function handleCloseLink(){
+        exit(); 
+        setIsOpen(false);
+        const setFailBill = async(id_: string)=>{
             try {
-                await dispatch(getListSeat());
+                await setFail(id_);
             } catch (error) {
                 console.log(error);
             }
         }
+        setFailBill(idBill);
+        dispatch(setUser({...userInfor, listSeat: []}));
+        setIdBill("");
         fetchDataSeat();
     }
 
-    function handleSave(){ //b4 kiem tra khong co moi thuc hien tiep
-        if(userInfor.phone.trim() === "") message.error("Không được bỏ trống số điện thoại!");
-        else if (userInfor.email.trim() === "") message.error("Không được bỏ trống email!");
-        else if (userInfor.address.trim() === "") message.error("Không được bỏ trống địa chỉ nhận vé!");
-        else if (userInfor.listSeat.length === 0) message.error("Bạn chưa chọn vị trí xem nào!");
-        else {
-            message.loading("Thực hiện thanh toán...");
-            handleGetPaymentLink();
-        }
-    }
-
-    const handleGetPaymentLink = async () => { //b5 khi da validate xong
-        exit();
-
-        const response = await doPayment(userInfor);
-
-        setPayOSConfig((oldConfig) => ({
-            ...oldConfig,
-            CHECKOUT_URL: response.checkoutUrl,
-        }));
-
-        localStorage.setItem("idBill", response.orderCode);
-
-        const fetchData = async ()=>{
-            try {
-                await saveDataSeat(userInfor, response.orderCode);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchData();
-
-        setIsOpen(true);
-    };
-
+    //Bước 6: Thoát giao diện thành công, reset dữ liệu ghế, bật giao diện ban đầu bước 0
     function handleBack(){
         dispatch(setUser({...userInfor, listSeat: []}));
-        setIsOpen(false);
+        fetchDataSeat();
         setIsSuccess(false);
-    }
-
-    function test(){
-        const fetchData = async ()=>{
-            try {
-                await saveDataBill(userInfor, "123");
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchData();
     }
 
     return(
         <div className="formbook">
             <div className='infor'>
-                <p className="title" onClick={test}>Đêm nhạc gây quỹ<br/><i>“Mùa Đông Yêu Thương 10”</i></p>
+                <p className="title">Đêm nhạc gây quỹ<br/><i>“Mùa Đông Yêu Thương 10”</i></p>
                 <div className="detail">
                     <div className="item">
                         <figure><img src={time_icon} alt="" /></figure>
@@ -238,10 +230,10 @@ export default function FormBook(){
                     </div>
                     <p className='note'>*Bạn hãy chọn trực tiếp những vị trí trên sơ đồ.</p>
                 </div>}
-                {!isOpen ? <p className='btn-submit' onClick={checkStill}>Thanh toán</p> //b1
+                {!isOpen ? <p className='btn-submit' onClick={checkStill}>Thanh toán</p>
                 :<div>
                     <div id="embedded-payment-container" style={{height: "328px"}}></div>
-                    <p className='back-btn' onClick={() => {setIsOpen(false); exit();}}>Trở lại</p>
+                    <p className='back-btn' onClick={handleCloseLink}>Trở lại</p>
                 </div>}
             </div>:
             <div className="form done">

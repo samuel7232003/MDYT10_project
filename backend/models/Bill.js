@@ -6,7 +6,9 @@ const billSchema = mongoose.Schema({
     phone: String,
     email: String,
     amount: Number,
-    address: String
+    address: String,
+    status: String,
+    createAt: Number
 })
 
 const billModel = mongoose.model("Bill", billSchema)

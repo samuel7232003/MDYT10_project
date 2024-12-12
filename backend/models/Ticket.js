@@ -7,7 +7,8 @@ const ticketSchema = mongoose.Schema({
     idBill: String,
     seat: String,
     status: String,
-    isActive: String
+    isActive: String,
+    createAt: Number,
 })
 
 const ticketModel = mongoose.model("Ticket", ticketSchema)

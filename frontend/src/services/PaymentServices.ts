@@ -13,21 +13,10 @@ export async function doPayment(userInfor: User) {
     }
 }
 
-export async function saveDataSeat(userInfor:User, idBill: string) {
+export async function savePending(userInfor:User, idBill: string) {
     try {
         const data = { name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat, idBill: idBill}
-        const respone:any = await apiInstance.post('/setTiket', data);
-        return respone;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function saveDataBill(userInfor:User, idBill: string) {
-    try {
-        const amount = userInfor.listSeat.length*1000;
-        const data = { amount:amount, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, idBill: idBill, address: userInfor.address};
-        const respone:any = await apiInstance.post('/setBill', data);
+        const respone:any = await apiInstance.post('/setPending', data);
         return respone;
     } catch (error) {
         throw error;
@@ -36,24 +25,15 @@ export async function saveDataBill(userInfor:User, idBill: string) {
 
 export async function getDataSeat() {
     try {
-        const respone= await apiInstance.get('/getSeat');
+        const respone:any = await apiInstance.get('/getSeat');
         let listSeat: Seat[] = [];
-        for(let i = 0; i< respone.data.length; i++){
-            const seat:Seat = {idTicket: respone.data[i]._id, name: respone.data[i].seat, status: respone.data[i].status}
+        for(let i = 0; i< respone.length; i++){
+            const seat:Seat = {idTicket: respone[i]._id, name: respone[i].seat, status: respone[i].status}
             listSeat.push(seat); 
         }
         return listSeat;
     } catch (error) {
         throw(error)
-    }
-}
-
-export async function setDone(idBill:string) {
-    try {
-        const respone = await apiInstance(`/doneBill?idBill=${idBill}`);
-        return respone;
-    } catch (error) {
-        throw error;
     }
 }
 
