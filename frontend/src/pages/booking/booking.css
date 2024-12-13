@@ -10,7 +10,7 @@
     padding-top: 70px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     overflow-y: auto;
 }
 
@@ -20,12 +20,23 @@
     align-items: center;
     min-width: 1024px;
     width: 1124px;
+    padding: 20px;
 }
 
 @media screen and (max-width: 1024px){
     .booking .sub-inner{
+        max-width: 1124px;
+        min-width: 375px;
+        width: 100%;
         flex-flow: column-reverse;
         gap: 50px;
+        justify-content: start;
+        padding: 20px 10px;
+    }
+}
+
+@media screen and (max-width: 375px){
+    .booking .inner{
         justify-content: start;
     }
 }

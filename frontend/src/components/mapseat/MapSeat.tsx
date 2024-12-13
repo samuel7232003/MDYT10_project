@@ -4,9 +4,12 @@ import { useAppDispatch, useAppSelector } from '../../redux/builder';
 import { setUser } from '../../redux/user/user.action';
 import { getListSeat } from '../../redux/seat/seat.action';
 import { message } from 'antd';
-import { deleteOutTime } from '../../services/PaymentServices';
 
-export default function MapSeat(){
+interface Props{
+    payMode: boolean;
+}
+
+export default function MapSeat({payMode}:Props){
     const user = useAppSelector(state => state.user.user);
     const listSeat = useAppSelector(state => state.seat.listSeat);
     const dispatch = useAppDispatch();
@@ -56,26 +59,29 @@ export default function MapSeat(){
     }
 
     function handleChoice(side: boolean, index: number, row: string){
-        fetchDataSeat();
-        let col = side ? index+1 : index+15;
-        let seat = "";
-        if(col<10) seat = row+"0"+col;
-        else seat = row+col
-        const seat_ = listSeat.find(index_ => index_.name === seat);
-        if(seat_) {
-            if(seat_.status === "DONE") message.error("Vị trí này đã được đặt, vui lòng chọn vị trí khác!"); //check order
-            if(seat_.status === "PENDING") message.error("Vị trí này đang được giữ để chờ thanh toán!");
-        }
-        else{
-            const check = selectSeat.find(index => index === seat);
-            if(!check){
-                setSelectSeat([...selectSeat, seat]);
+        if(!payMode){
+            fetchDataSeat();
+            let col = side ? index+1 : index+15;
+            let seat = "";
+            if(col<10) seat = row+"0"+col;
+            else seat = row+col
+            const seat_ = listSeat.find(index_ => index_.name === seat);
+            if(seat_) {
+                if(seat_.status === "DONE") message.error("Vị trí này đã được đặt, vui lòng chọn vị trí khác!"); //check order
+                if(seat_.status === "PENDING") message.error("Vị trí này đang được giữ để chờ thanh toán!");
             }
-            else {
-                const list = selectSeat.filter(index => index !== seat);
-                setSelectSeat([...list]);
+            else{
+                const check = selectSeat.find(index => index === seat);
+                if(!check){
+                    setSelectSeat([...selectSeat, seat]);
+                }
+                else {
+                    const list = selectSeat.filter(index => index !== seat);
+                    setSelectSeat([...list]);
+                }
             }
         }
+        else {message.error("Bạn không thể thay đổi vị trí khi đang thanh toán!")}
     }
 
     function findColor(side: boolean, index: number, row: string){
@@ -125,8 +131,11 @@ export default function MapSeat(){
     }
 
     function handleRemove(seat: string){
-        const list = selectSeat.filter(index => index !== seat);
-        setSelectSeat([...list]);
+        if(!payMode){
+            const list = selectSeat.filter(index => index !== seat);
+            setSelectSeat([...list]);
+        }
+        else {message.error("Bạn không thể xóa khi đang thanh toán!")}
     }
 
     return(

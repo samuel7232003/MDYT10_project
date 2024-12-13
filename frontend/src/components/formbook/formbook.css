@@ -167,6 +167,18 @@
     transition: background-color ease-in-out 0.25s;
 }
 
+.formbook .form .clock{
+    position: absolute;
+    top: 20px;
+    right: left;
+    padding: 10px 10px;
+    border-radius: 8px;
+    background-color: rgba(255, 0, 0, 0.485);
+    color: white;
+    cursor: pointer;
+    transition: background-color ease-in-out 0.25s;
+}
+
 .formbook .form.done{
     display: flex;
     flex-flow: column;
@@ -185,4 +197,49 @@
 
 .formbook .form .back-btn:hover{
     background-color: red;
+}
+
+#embedded-payment-container{
+    height: 328px;
+}
+
+@media screen and (max-width: 768px){
+    .formbook{
+        max-width: 500px;
+        width: 100%;
+    }
+
+    #embedded-payment-container {
+        height: 585px;
+    }
+}
+
+@media screen and (max-width: 425px){
+    .formbook .form, .formbook .infor {
+        padding: 15px 10px;
+    }
+
+    .formbook .detail {
+        gap: 10px;
+    }
+
+    .formbook .detail .item .sub-title {
+        font-size: 14px;
+    }
+
+    .formbook .infor .detail .item .content {
+        font-size: 14px;
+    }
+
+    .formbook .infor .detail .item .sub-title {
+        min-width: 66px;
+    }
+
+    .formbook .form .detail .item .sub-title {
+        min-width: 70px;
+    }
+
+    .formbook .form .note {
+        padding: 5px 15px;
+    }
 }

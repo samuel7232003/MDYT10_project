@@ -193,3 +193,89 @@
 .mapseat .listchoice div ul li:hover{
     background-color: red;
 }
+
+@media screen and (max-width: 768px){
+    .mapseat{
+        max-width: 405px;
+        width: 100%;
+    }
+
+    .mapseat .main .list-row .row .rowseat{
+        gap: 18px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .seat {
+        width: 12px;
+        height: 12px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .right {
+        width: 192px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .left {
+        width: 168px;
+    }
+
+    .mapseat .main .list-row {
+        gap: 2px;
+    }
+
+    .mapseat .main .list-row .row .textrow {
+        font-size: 10px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .seatnum {
+        width: 12px;
+    }
+
+    .mapseat .note .item div {
+        height: 12px;
+        width: 12px;
+    }
+    
+    .mapseat .note .item {
+        font-size: 12px;
+    }
+
+    .mapseat .listchoice p {
+        font-size: 14px;
+        width: 85px;
+    }
+}
+
+@media screen and (max-width: 425px){
+    .mapseat .main .list-row .row .rowseat .seat {
+        width: 11px;
+        height: 11px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .right {
+        width: 176px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .left {
+        width: 154px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .seatnum {
+        width: 11px;
+    }
+
+    .mapseat .note .item div {
+        height: 11px;
+        width: 11px;
+    }
+    
+    .mapseat .note .item {
+        font-size: 11px;
+    }
+
+    .mapseat .main .list-row .row .rowseat .seatnum {
+        font-size: 7px;
+    }
+
+    .mapseat .main .list-row .row {
+        height: 11px;
+    }
+}

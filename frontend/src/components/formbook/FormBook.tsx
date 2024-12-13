@@ -14,7 +14,11 @@ import { doPayment, savePending, setFail } from '../../services/PaymentServices'
 import check_done from './images/Check_round_fill.png'
 import { getListSeat } from '../../redux/seat/seat.action'
 
-export default function FormBook(){
+interface Props{
+    setPayMode: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function FormBook({setPayMode}:Props){
     const user = useAppSelector(state => state.user.user);
     const listSeatBook = useAppSelector(state => state.seat.listSeat);
     const dispatch = useAppDispatch();
@@ -68,9 +72,21 @@ export default function FormBook(){
 
     //Bước 4: Kiểm tra đã có link checkout chưa mới mở linklink
     useEffect(() => {
-        if (payOSConfig.CHECKOUT_URL && isOpen) open();
+        if (payOSConfig.CHECKOUT_URL && isOpen){
+            open();
+            setTimeLeft(180);
+            setPayMode(true);
+            message.info("Vị trí chỉ sẽ được giữ cho bạn trong 3 phút, vui lòng thanh toán trong khoảng thời gian này!");
+        }
         // eslint-disable-next-line
     }, [payOSConfig]);
+
+    function reset(){
+        setPayMode(false);
+        dispatch(setUser({...userInfor, listSeat: []}));
+        setIdBill("");
+        fetchDataSeat();
+    }
 
     //Buoc 1: Validate & kiem tra du lieu moi nhat
     function checkStill(){
@@ -108,8 +124,6 @@ export default function FormBook(){
     //Bước 5_(1): Khi hệ thống nhận thấy đã thanh toán thành công, xóa idBill, chuyển giao diện thành công!
     function handleSuccess(){
         message.success("Thanh toán thành công!");
-        setIdBill("");
-        dispatch(setUser({...userInfor, listSeat: []}));
         setIsOpen(false);
         setIsSuccess(true);
     }
@@ -126,12 +140,8 @@ export default function FormBook(){
             }
         }
         const id = localStorage.getItem("idBill");
-        console.log(idBill);
-        console.log(id);
         if(id) setFailBill(id);
-        dispatch(setUser({...userInfor, listSeat: []}));
-        setIdBill("");
-        fetchDataSeat();
+        reset();
     }
 
     const fetchDataSeat = async()=>{
@@ -163,17 +173,37 @@ export default function FormBook(){
             }
         }
         setFailBill(idBill);
-        dispatch(setUser({...userInfor, listSeat: []}));
-        setIdBill("");
-        fetchDataSeat();
+        reset();
     }
 
     //Bước 6: Thoát giao diện thành công, reset dữ liệu ghế, bật giao diện ban đầu bước 0
     function handleBack(){
-        dispatch(setUser({...userInfor, listSeat: []}));
-        fetchDataSeat();
+        reset();
         setIsSuccess(false);
     }
+
+    // Thiết lập thời gian ban đầu (3 phút = 180 giây)
+    const [timeLeft, setTimeLeft] = useState(180);
+
+    useEffect(() => {
+        // Nếu thời gian còn lại là 0, không làm gì thêm
+        if (timeLeft === 0) return;
+
+        // Thiết lập một interval để giảm thời gian mỗi giây
+        const interval = setInterval(() => {
+            setTimeLeft(prevTime => prevTime - 1);
+        }, 1000);
+
+        // Dọn dẹp khi component bị hủy hoặc khi interval kết thúc
+        return () => clearInterval(interval);
+    }, [timeLeft]); // Chạy lại effect mỗi khi timeLeft thay đổi
+
+    // Hàm chuyển đổi giây thành phút và giây
+    const formatTime = (time:any) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = time % 60;
+        return `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    };
 
     return(
         <div className="formbook">
@@ -232,8 +262,9 @@ export default function FormBook(){
                 </div>}
                 {!isOpen ? <p className='btn-submit' onClick={checkStill}>Thanh toán</p>
                 :<div>
-                    <div id="embedded-payment-container" style={{height: "328px"}}></div>
+                    <div id="embedded-payment-container"></div>
                     <p className='back-btn' onClick={handleCloseLink}>Trở lại</p>
+                    <p className='clock'>{formatTime(timeLeft)}</p>
                 </div>}
             </div>:
             <div className="form done">
