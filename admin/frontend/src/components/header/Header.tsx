@@ -44,18 +44,9 @@ export default function Header({curPage} :Props){
         <header className={hide? "hide": ""}>
             <div className="header-left">
                 <figure onClick={() => navigate('./')}><img src={mdyt10} alt="" /></figure>
-                <nav>
-                    <ul>
-                        <li className="main" onClick={() => {navigate('/'); scrollToNum(0)}}>Trang chủ</li>
-                        {curPage==="home" && <li onClick={() => scrollToNum(1)}>Hành trình</li>}
-                        {curPage==="home" && <li onClick={() => scrollToNum(2)}>MĐYT 10</li>}
-                        {curPage==="home" && <li onClick={() => scrollToNum(3)}>Chúng tôi</li>}
-                    </ul>
-                </nav>
             </div>
             <div className="header-right">
-                <p className='donate-now' onClick={() => navigate('./donate')}>ỦNG HỘ</p>
-                <p onClick={() => navigate('./booking')}>MUA VÉ NGAY</p>
+                <p onClick={() => navigate('./login')}>Đăng nhập</p>
             </div>
         </header>
     )

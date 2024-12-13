@@ -3,6 +3,7 @@ import Home from "./screens/Home";
 import Notfound from "./screens/NotFound";
 import React from "react";
 import Login from "./pages/login/Login";
+import HomePage from "./pages/homepage/HomePage";
 
 export const router = createBrowserRouter([
     {
@@ -11,6 +12,10 @@ export const router = createBrowserRouter([
         children:[
             {
                 path:"/",
+                element: <HomePage/>
+            },
+            {
+                path:"/login",
                 element: <Login/>
             }
         ]

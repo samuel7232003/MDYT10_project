@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { thunk } from "redux-thunk";
 import userSlice from "./user/user.slice";
-import { seatSlice } from "./seat/seat.slice";
+import { billSlice } from "./bill/bill.slice";
 
 export const store = configureStore({
     reducer: {
         user: userSlice.reducer,
-        seat: seatSlice.reducer
+        bill: billSlice.reducer
     },
     middleware:(getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 })

@@ -1,0 +1,14 @@
+.login{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login .block{
+    width: 300px;
+    height: 500px;
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+}

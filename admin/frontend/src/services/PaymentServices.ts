@@ -1,59 +1,25 @@
-import { Seat } from "../redux/seat/seat.state";
-import { User } from "../redux/user/user.state";
+import { Bill } from "../redux/bill/bill.state";
 import { apiInstance } from "./api";
 
-export async function doPayment(userInfor: User) {
+export async function getDataBill() {
     try {
-        const amount_ = userInfor.listSeat.length*50000;
-        const data = {amount: amount_, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat}
-        const respone:any = await apiInstance.post('/create-embedded-payment-link', data);
-        return respone;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function savePending(userInfor:User, idBill: string) {
-    try {
-        const amount_ = userInfor.listSeat.length*1000;
-        const data = {amount: amount_, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat, idBill: idBill}
-        const respone:any = await apiInstance.post('/setPending', data);
-        return respone;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function getDataSeat() {
-    try {
-        await apiInstance("/deleteOutTime");
-        const respone:any = await apiInstance.get('/getSeat');
-        let listSeat: Seat[] = [];
+        const respone:any = await apiInstance.get('/getAllBill');
+        let listBill: Bill[] = [];
         for(let i = 0; i< respone.length; i++){
-            const seat:Seat = {idTicket: respone[i]._id, name: respone[i].seat, status: respone[i].status}
-            listSeat.push(seat); 
+            const amount = respone[i].amount;
+            const bill:Bill = {
+                _id: respone[i]._id, 
+                idBill: respone[i].idBill, 
+                name: respone[i].name, 
+                phone: respone[i].phone, 
+                email: respone[i].email,
+                address: respone[i].address,
+                numSeat: amount/50000
+            }
+            listBill.push(bill); 
         }
-        return listSeat;
+        return listBill;
     } catch (error) {
         throw(error)
-    }
-}
-
-export async function setFail(idBill: string) {
-    try {
-        const respone = await apiInstance(`/deleteBill?idBill=${idBill}`);
-        return respone;
-    } catch (error) {
-        throw error;
-    }
-}
-
-export async function deleteOutTime() {
-    try {
-        const respone = await apiInstance("/deleteOutTime");
-        console.log(respone);
-        return respone;
-    } catch (error) {
-        throw error;
     }
 }
