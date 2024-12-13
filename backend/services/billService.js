@@ -33,6 +33,16 @@ const deletePendingBillService = async (idBill) =>{
     }
 }
 
+const deleteOutTimeBillService = async (time) => {
+    try {
+        const res_ = await billModel.deleteMany({status: "PENDING", createAt: {$lt: time} });
+        return res_;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 module.exports = {
-    setBillService, setDoneBillService, deletePendingBillService
+    setBillService, setDoneBillService, deletePendingBillService, deleteOutTimeBillService
 }

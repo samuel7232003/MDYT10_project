@@ -15,7 +15,8 @@ export async function doPayment(userInfor: User) {
 
 export async function savePending(userInfor:User, idBill: string) {
     try {
-        const data = { name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat, idBill: idBill}
+        const amount_ = userInfor.listSeat.length*1000;
+        const data = {amount: amount_, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat, idBill: idBill}
         const respone:any = await apiInstance.post('/setPending', data);
         return respone;
     } catch (error) {
@@ -25,6 +26,7 @@ export async function savePending(userInfor:User, idBill: string) {
 
 export async function getDataSeat() {
     try {
+        await apiInstance("/deleteOutTime");
         const respone:any = await apiInstance.get('/getSeat');
         let listSeat: Seat[] = [];
         for(let i = 0; i< respone.length; i++){
@@ -40,6 +42,16 @@ export async function getDataSeat() {
 export async function setFail(idBill: string) {
     try {
         const respone = await apiInstance(`/deleteBill?idBill=${idBill}`);
+        return respone;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function deleteOutTime() {
+    try {
+        const respone = await apiInstance("/deleteOutTime");
+        console.log(respone);
         return respone;
     } catch (error) {
         throw error;

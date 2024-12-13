@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/builder';
 import { setUser } from '../../redux/user/user.action';
 import { getListSeat } from '../../redux/seat/seat.action';
 import { message } from 'antd';
+import { deleteOutTime } from '../../services/PaymentServices';
 
 export default function MapSeat(){
     const user = useAppSelector(state => state.user.user);

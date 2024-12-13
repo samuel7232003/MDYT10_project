@@ -1,5 +1,5 @@
-const { setBillService, deletePendingBillService } = require("../services/billService");
-const { setTicketService, detelePendingTicketService } = require("../services/ticketService");
+const { setBillService, deletePendingBillService, deleteOutTimeBillService } = require("../services/billService");
+const { setTicketService, detelePendingTicketService, deleteOutTimeTicketService } = require("../services/ticketService");
 
 const setPending = async (req, res)=>{
     const data = req.body;
@@ -38,6 +38,18 @@ const deleteBill = async(req, res) =>{
     }
 }
 
+const deleteOutTime = async(req, res) =>{
+    try {
+        const time = Date.now() - 180000;
+        const responce = await deleteOutTimeBillService(time);
+        await deleteOutTimeTicketService(time);
+        res.json(responce);
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 module.exports = {
-    setPending, deleteBill
+    setPending, deleteBill, deleteOutTime
 }
