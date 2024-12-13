@@ -48,6 +48,8 @@ const onStatusPayment = async (req, res) =>{
         const res = await setDoneTicketService(orderCode);
         await setDoneBillService(orderCode);
 
+        console.log(res);
+
         const data = {
             name: webhookData.data.counterAccountName,
             numAccount: webhookData.data.counterAccountNumber,
