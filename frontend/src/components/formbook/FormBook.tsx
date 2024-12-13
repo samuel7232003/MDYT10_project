@@ -245,12 +245,12 @@ export default function FormBook({setPayMode}:Props){
                         <p className='sub-title'>Email*:</p>
                         <fieldset><input value={userInfor.email} type="email" onChange={e => handleChange("email", e.target.value)}/></fieldset>
                     </div>
-                    <p className='note'><b>*Lưu ý:</b> Chúng mình sẽ gửi vé qua địa chỉ email của bạn, hãy nhập chính xác và kiểm tra lại trước khi đặt nhé!</p>
                     <div className='item'>
                         <figure><img src={email_icon} alt="" /></figure>
                         <p className='sub-title'>Địa chỉ nhận*:</p>
                         <fieldset><input value={userInfor.address} type="text" onChange={e => handleChange("address", e.target.value)}/></fieldset>
                     </div>
+                    <p className='note'><b>*Lưu ý:</b> Chúng mình sẽ gửi vé trực tiếp qua địa chỉ bạn cung cấp và gửi kèm vé online qua email, hãy nhập chính xác và kiểm tra lại trước khi thanh toán nhé!</p>
                     <div className='item'>
                         <figure><img src={price_icon} alt="" /></figure>
                         <p className='sub-title'>Vị trí đã chọn*:</p>
