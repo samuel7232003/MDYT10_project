@@ -19,7 +19,7 @@ const createPaymaentUrl = async(req, res)=>{
         },
         returnUrl: `${YOUR_DOMAIN}`,
         cancelUrl: `${YOUR_DOMAIN}`,
-        expiredAt: Math.floor((Date.now() + 180000)/1000)
+        expiredAt: Math.floor((Date.now() + 10000)/1000)
     };
 
     try {
@@ -48,7 +48,6 @@ const onStatusPayment = async (req, res) =>{
         const res = await setDoneTicketService(orderCode);
         await setDoneBillService(orderCode);
 
-        console.log(res);
 
         const data = {
             name: webhookData.data.counterAccountName,
@@ -57,7 +56,7 @@ const onStatusPayment = async (req, res) =>{
             time: webhookData.data.transactionDateTime,
             amount: webhookData.data.amoun,
         }
-        if(!res) await createOverTimeService(data);
+        if(res.modifiedCount === 0) await createOverTimeService(data);
     } else {
         console.log(`Giao dịch ${orderCode} thất bại`);
     }
