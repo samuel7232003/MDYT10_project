@@ -71,6 +71,11 @@ header .header-left ul li:hover::after{
     width: 100%;
 }
 
+header .header-right{
+    display: flex;
+    gap: 10px;
+}
+
 header .header-right p{
     height: 50px;
     width: 152px;
@@ -92,5 +97,13 @@ header .header-right p:hover{
 @media screen and (max-width: 768px){
     header .header-left nav{
         display: none;
+    }
+
+    header .header-right p{
+        width: 130px;
+    }
+    
+    header .header-right .donate-now{
+        width: 77px;
     }
 }

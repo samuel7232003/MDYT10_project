@@ -217,6 +217,20 @@
     background-color: red;
 }
 
+.mapseat .wait{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    gap: 10px
+}
+
+.mapseat .wait p{
+    color: #D9D9D9;
+}
+
 @media screen and (max-width: 768px){
     .mapseat{
         max-width: 405px;

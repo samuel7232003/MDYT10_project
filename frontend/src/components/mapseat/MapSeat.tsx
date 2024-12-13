@@ -3,7 +3,7 @@ import './mapseat.css'
 import { useAppDispatch, useAppSelector } from '../../redux/builder';
 import { setUser } from '../../redux/user/user.action';
 import { getListSeat } from '../../redux/seat/seat.action';
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 
 interface Props{
     payMode: boolean;
@@ -179,6 +179,11 @@ export default function MapSeat({payMode}:Props){
                 </div>
             </div>
         </div>
-        :<div className="mapseat"></div>
+        :<div className="mapseat">
+            <div className='wait'>
+                <Spin size="large" tip="Đang tải dữ liệu..."/>
+                <p>Đang tải dữ liệu...</p>
+            </div>
+        </div>
     )
 }

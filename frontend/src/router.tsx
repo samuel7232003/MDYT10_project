@@ -3,6 +3,7 @@ import Home from "./screens/Home";
 import Welcome from "./pages/Welcome";
 import Booking from "./pages/booking/Booking";
 import Notfound from "./screens/NotFound";
+import Donate from "./pages/donate/Donate";
 
 export const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
             {
                 path:"booking",
                 element: <Booking/>
+            },
+            {
+                path:"donate",
+                element: <Donate/>
             }
         ]
     },
