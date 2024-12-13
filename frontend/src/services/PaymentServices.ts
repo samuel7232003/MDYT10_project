@@ -4,7 +4,7 @@ import { apiInstance } from "./api";
 
 export async function doPayment(userInfor: User) {
     try {
-        const amount_ = userInfor.listSeat.length*1000;
+        const amount_ = userInfor.listSeat.length*50000;
         const data = {amount: amount_, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat}
         const respone:any = await apiInstance.post('/create-embedded-payment-link', data);
         return respone;

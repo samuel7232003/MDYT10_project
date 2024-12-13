@@ -43,7 +43,7 @@ export default function Header({curPage} :Props){
     return (
         <header className={hide? "hide": ""}>
             <div className="header-left">
-                <figure><img src={mdyt10} alt="" /></figure>
+                <figure onClick={() => navigate('./')}><img src={mdyt10} alt="" /></figure>
                 <nav>
                     <ul>
                         <li className="main" onClick={() => {navigate('/'); scrollToNum(0)}}>Trang chủ</li>
