@@ -1,13 +1,18 @@
 import { Table, TableProps } from "antd";
 import "./homepage.css"
 import { useAppDispatch, useAppSelector } from "../../redux/builder";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getListBill } from "../../redux/bill/bill.action";
 import { Bill } from "../../redux/bill/bill.state";
+
+interface DataType extends Bill{
+    key: string;
+}
 
 export default function HomePage(){
     const listBill = useAppSelector(state => state.bill.listBill);
     const dispatch = useAppDispatch();
+    const [listData, setListData] = useState<DataType[]>([]);
 
     useEffect(() => {
         const fetchData = async ()=>{
@@ -20,7 +25,15 @@ export default function HomePage(){
         fetchData();
     }, [])
 
-    const columns: TableProps<Bill>['columns'] = [
+    useEffect(() => {
+        let list:DataType[] = [];
+        for(let i=0; i<listBill.length; i++){
+            list.push({key: listBill[i]._id, ...listBill[i]})
+        }
+        setListData(list);
+    },[listBill])
+
+    const columns: TableProps<DataType>['columns'] = [
         {
           title: 'ID Bill',
           dataIndex: 'idBill',
@@ -32,7 +45,7 @@ export default function HomePage(){
           key: 'name',
         },
         {
-          title: 'Số điện thoạithoại',
+          title: 'Số điện thoại',
           dataIndex: 'phone',
           key: 'phone',
         },
@@ -47,7 +60,7 @@ export default function HomePage(){
           key: 'address',
         },
         {
-          title: 'Số vé đặtđặt',
+          title: 'Số vé đặt',
           key: 'numSeat',
           dataIndex: 'numSeat',
         },
@@ -57,7 +70,7 @@ export default function HomePage(){
     return(
         <div className="homepage">
             <div>
-                <Table<Bill> columns={columns} dataSource={listBill}/>
+                <Table<DataType> columns={columns} dataSource={listData}/>
             </div>
         </div>
     )

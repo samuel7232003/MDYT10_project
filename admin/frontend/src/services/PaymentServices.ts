@@ -14,7 +14,7 @@ export async function getDataBill() {
                 phone: respone[i].phone, 
                 email: respone[i].email,
                 address: respone[i].address,
-                numSeat: amount/50000
+                numSeat: amount/1000
             }
             listBill.push(bill); 
         }
