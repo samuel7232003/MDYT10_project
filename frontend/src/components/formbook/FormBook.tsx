@@ -213,7 +213,7 @@ export default function FormBook({setPayMode}:Props){
                     <div className="item">
                         <figure><img src={time_icon} alt="" /></figure>
                         <p className="sub-title">Thời gian:</p>
-                        <p className="content">Từ 5h00 đến 22h00 ngày 4/1/2025</p>
+                        <p className="content">Từ 17h30 đến 22h00 ngày 04/01/2025</p>
                     </div>
                     <div className="item">
                         <figure><img src={location_icon} alt="" /></figure>

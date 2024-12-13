@@ -38,6 +38,29 @@
     color: black;
     font-size: 20px;
     font-weight: bold;
+    position: relative;
+}
+
+.mapseat .main .stage p::after{
+    content: "";
+    height: 20px;
+    width: 38px;
+    position: absolute;
+    left: -67px;
+    bottom: -10px;
+    background-color: #D9D9D9;
+    transform: rotate(-26deg);
+}
+
+.mapseat .main .stage p::before{
+    content: "";
+    height: 20px;
+    width: 38px;
+    position: absolute;
+    right: -67px;
+    bottom: -10px;
+    background-color: #D9D9D9;
+    transform: rotate(26deg);
 }
 
 .mapseat .main .list-row{

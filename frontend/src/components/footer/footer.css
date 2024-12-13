@@ -49,8 +49,19 @@ footer .infor .sub-title{
     font-weight: bold;
 }
 
-footer .infor ul{
+footer .infor .logo{
     height: 70px;
+    display: flex;
+    gap: 20px;
+    padding-bottom: 15px;
+}
+
+footer .infor .logo figure{
+    height: 100%;
+}
+
+footer .infor .logo figure img{
+    height: 100%;
 }
 
 footer .clb .infor .contact{
