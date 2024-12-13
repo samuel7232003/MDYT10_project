@@ -254,7 +254,7 @@ export default function FormBook({setPayMode}:Props){
                     <div className='item'>
                         <figure><img src={price_icon} alt="" /></figure>
                         <p className='sub-title'>Vị trí đã chọn*:</p>
-                        <div>
+                        <div onClick={()=> {message.info("Vui lòng chọn trực tiếp vị trí trên sơ đồ.")}}>
                             <ul>{userInfor.listSeat.map(index => <li key={index} onClick={() => handleRemove(index)}>{index}</li>)}</ul>
                         </div>
                     </div>
