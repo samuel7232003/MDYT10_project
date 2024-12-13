@@ -49,7 +49,7 @@ export default function MapSeat({payMode}:Props){
         for (let i = 65; i <= 84; i++) { // 65 là mã ASCII của 'A', 84 là mã ASCII của 'T'
             alphabet.push(String.fromCharCode(i));
         }
-        for(let i = 0; i<3; i++) alphabet.unshift("");
+        alphabet.unshift("");
         setNumRoll(alphabet);
     }
 
@@ -66,7 +66,8 @@ export default function MapSeat({payMode}:Props){
             if(col<10) seat = row+"0"+col;
             else seat = row+col
             const seat_ = listSeat.find(index_ => index_.name === seat);
-            if(seat_) {
+            if(row === "A" || row ==="B") message.error("Vị trí này đã được đặt, vui lòng chọn vị trí khác!");
+            else if(seat_) {
                 if(seat_.status === "DONE") message.error("Vị trí này đã được đặt, vui lòng chọn vị trí khác!"); //check order
                 if(seat_.status === "PENDING") message.error("Vị trí này đang được giữ để chờ thanh toán!");
             }
@@ -85,6 +86,7 @@ export default function MapSeat({payMode}:Props){
     }
 
     function findColor(side: boolean, index: number, row: string){
+        if(row ==="A" || row ==="B") return {backgroundColor: "#D9D9D9"};
         let col = side ? index+1 : index+15;
         let seat = "";
         if(col<10) seat = row+"0"+col;
