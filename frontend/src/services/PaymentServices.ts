@@ -16,8 +16,7 @@ export async function doPayment(userInfor: User) {
 export async function savePending(userInfor:User, idBill: string) {
     try {
         const amount_ = userInfor.listSeat.length*1000;
-        const data = {amount: amount_, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat, address: userInfor.address, idBill: idBill}
-        console.log(data);
+        const data = {amount: amount_, name: userInfor.name, phone: userInfor.phone, email: userInfor.email, listSeat: userInfor.listSeat, address: userInfor.address, idBill: idBill};
         const respone:any = await apiInstance.post('/setPending', data);
         return respone;
     } catch (error) {
