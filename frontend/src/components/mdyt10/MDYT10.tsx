@@ -4,6 +4,8 @@ import image1 from './images/image1.png'
 import image2 from './images/image2.png'
 import image3 from './images/image3.png'
 import image4 from './images/image4.png'
+import image5 from "./images/image5.png"
+import image6 from "./images/image6.png"
 import { Carousel } from 'antd';
 import mount from './images/mdyt 4.png'
 
@@ -16,6 +18,8 @@ export default function MDYT10(){
                 <figure className='back'><img src={image2} alt="" loading='lazy'/></figure>
                 <figure className='back'><img src={image3} alt="" loading='lazy'/></figure>
                 <figure className='back'><img src={image4} alt="" loading='lazy'/></figure>
+                <figure className='back'><img src={image5} alt="" loading='lazy'/></figure>
+                <figure className='back'><img src={image6} alt="" loading='lazy'/></figure>
             </Carousel>
             <div className="inner">
                 <div className="content">

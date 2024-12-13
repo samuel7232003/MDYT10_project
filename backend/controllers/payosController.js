@@ -3,6 +3,7 @@ const crypto = require("crypto");
 const { createLinkService } = require('../services/payosService');
 const { setDoneTicketService } = require('../services/ticketService');
 const { setDoneBillService } = require('../services/billService');
+const { createOverTimeService } = require('../services/overTimeService');
 
 const createPaymaentUrl = async(req, res)=>{
     const YOUR_DOMAIN = process.env.DOMAIN;
@@ -44,8 +45,17 @@ const onStatusPayment = async (req, res) =>{
     }
 
     if (status === "success") {
-        await setDoneTicketService(orderCode);
+        const res = await setDoneTicketService(orderCode);
         await setDoneBillService(orderCode);
+
+        const data = {
+            name: webhookData.data.counterAccountName,
+            numAccount: webhookData.data.counterAccountNumber,
+            infor: webhookData.data.description,
+            time: webhookData.data.transactionDateTime,
+            amount: webhookData.data.amoun,
+        }
+        if(!res) await createOverTimeService(data);
     } else {
         console.log(`Giao dịch ${orderCode} thất bại`);
     }
