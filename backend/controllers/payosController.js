@@ -19,7 +19,7 @@ const createPaymaentUrl = async(req, res)=>{
         },
         returnUrl: `${YOUR_DOMAIN}`,
         cancelUrl: `${YOUR_DOMAIN}`,
-        expiredAt: Math.floor((Date.now() + 10000)/1000)
+        expiredAt: Math.floor((Date.now() + 300000)/1000)
     };
 
     try {

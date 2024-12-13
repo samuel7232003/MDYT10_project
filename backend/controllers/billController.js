@@ -40,7 +40,7 @@ const deleteBill = async(req, res) =>{
 
 const deleteOutTime = async(req, res) =>{
     try {
-        const time = Date.now() - 180000;
+        const time = Date.now() - 300000;
         const responce = await deleteOutTimeBillService(time);
         await deleteOutTimeTicketService(time);
         res.json(responce);

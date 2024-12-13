@@ -74,9 +74,9 @@ export default function FormBook({setPayMode}:Props){
     useEffect(() => {
         if (payOSConfig.CHECKOUT_URL && isOpen){
             open();
-            setTimeLeft(180);
+            setTimeLeft(300);
             setPayMode(true);
-            message.info("Vị trí chỉ sẽ được giữ cho bạn trong 3 phút, vui lòng thanh toán trong khoảng thời gian này!");
+            message.info("Vị trí chỉ sẽ được giữ cho bạn trong 5 phút, vui lòng thanh toán trong khoảng thời gian này!");
         }
         // eslint-disable-next-line
     }, [payOSConfig]);
@@ -183,7 +183,7 @@ export default function FormBook({setPayMode}:Props){
     }
 
     // Thiết lập thời gian ban đầu (3 phút = 180 giây)
-    const [timeLeft, setTimeLeft] = useState(180);
+    const [timeLeft, setTimeLeft] = useState(300);
 
     useEffect(() => {
         // Nếu thời gian còn lại là 0, không làm gì thêm
