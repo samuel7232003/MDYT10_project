@@ -9,7 +9,7 @@ const createPaymaentUrl = async(req, res)=>{
     const body = {
         orderCode: Number(String(Date.now()).slice(-6)),
         amount: req.body.amount,
-        description: req.body.phone+" Thanh toan don hang",
+        description: req.body.phone+" thanh toan",
         infor: {
             name: req.body.name,
             phone: req.body.phone,
