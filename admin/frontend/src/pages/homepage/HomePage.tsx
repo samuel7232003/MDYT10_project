@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/builder";
 import { useEffect, useState } from "react";
 import { getListBill } from "../../redux/bill/bill.action";
 import { Bill } from "../../redux/bill/bill.state";
+import { sendEmail } from "../../services/EmailService";
 
 interface DataType extends Bill{
     key: string;
@@ -66,11 +67,22 @@ export default function HomePage(){
         },
     ];
       
+    function test() {
+      const send = async ()=>{
+        try {
+          const res = await sendEmail({email: "thanhleviet723@gmail.com", subject:"Test", content:"test he thong coi duoc han"});
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      send();
+    }
     
     return(
         <div className="homepage">
             <div>
                 <Table<DataType> columns={columns} dataSource={listData}/>
+                  <p onClick={test}>testtt</p>
             </div>
         </div>
     )

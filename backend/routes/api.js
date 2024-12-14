@@ -2,6 +2,7 @@ const express = require('express');
 const { createPaymaentUrl, onStatusPayment } = require('../controllers/payosController');
 const { setPending, deleteBill, deleteOutTime } = require('../controllers/billController');
 const { getAllTicket } = require('../controllers/ticketController');
+const { sendemail } = require('../controllers/sendEmailController');
 const routerAPI = express.Router();
 
 
@@ -17,5 +18,7 @@ routerAPI.get("/deleteBill", deleteBill);
 routerAPI.get("/deleteOutTime", deleteOutTime);
 
 routerAPI.get("/getSeat", getAllTicket);
+
+routerAPI.post("/sendemail", sendemail);
 
 module.exports = routerAPI;

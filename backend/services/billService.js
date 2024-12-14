@@ -43,6 +43,16 @@ const deleteOutTimeBillService = async (time) => {
     }
 }
 
+const getBill = async(idBill) => {
+    try {
+        const responce = await billModel.find({idBill: idBill});
+        return responce;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 module.exports = {
-    setBillService, setDoneBillService, deletePendingBillService, deleteOutTimeBillService
+    setBillService, setDoneBillService, deletePendingBillService, deleteOutTimeBillService, getBill
 }

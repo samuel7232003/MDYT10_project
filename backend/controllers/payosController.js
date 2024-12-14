@@ -2,8 +2,9 @@ require('dotenv').config();
 const crypto = require("crypto");
 const { createLinkService } = require('../services/payosService');
 const { setDoneTicketService } = require('../services/ticketService');
-const { setDoneBillService } = require('../services/billService');
+const { setDoneBillService, getBill } = require('../services/billService');
 const { createOverTimeService } = require('../services/overTimeService');
+const { sendemail } = require('./sendEmailController');
 
 const createPaymaentUrl = async(req, res)=>{
     const YOUR_DOMAIN = process.env.DOMAIN;
@@ -48,7 +49,6 @@ const onStatusPayment = async (req, res) =>{
         const res = await setDoneTicketService(orderCode);
         await setDoneBillService(orderCode);
 
-
         const data = {
             name: webhookData.data.counterAccountName,
             numAccount: webhookData.data.counterAccountNumber,
@@ -57,6 +57,11 @@ const onStatusPayment = async (req, res) =>{
             amount: webhookData.data.amoun,
         }
         if(res.modifiedCount === 0) await createOverTimeService(data);
+        else{
+            const bill = await getBill(orderCode);
+            await sendemail(bill);
+        }
+
     } else {
         console.log(`Giao dịch ${orderCode} thất bại`);
     }
