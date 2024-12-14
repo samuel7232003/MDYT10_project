@@ -42,7 +42,7 @@ const sendemail = async (data) => {
     })
     // mailOption là những thông tin gửi từ phía client lên thông qua API
     const mailOptions = {
-      to: data.email.trim(), // Gửi đến ai?
+      to: data.email, // Gửi đến ai?
       subject: "[MÙA ĐÔNG YÊU THƯƠNG 10] XÁC NHẬN ĐẶT VÉ THÀNH CÔNG!", // Tiêu đề email
       html:  `
       <h3>Xác nhận vé đã đặt thành công!</h3>
