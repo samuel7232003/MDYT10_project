@@ -45,8 +45,7 @@ const deleteOutTimeBillService = async (time) => {
 
 const getBill = async(idBill) => {
     try {
-        const responce = await billModel.find({idBill: idBill});
-        console.log(responce);
+        const responce = await billModel.findOne({idBill: idBill});
         return responce;
     } catch (error) {
         console.log(error);

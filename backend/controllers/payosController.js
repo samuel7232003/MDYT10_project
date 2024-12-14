@@ -59,7 +59,6 @@ const onStatusPayment = async (req, res) =>{
         if(res.modifiedCount === 0) await createOverTimeService(data);
         else{
             const bill = await getBill(orderCode);
-            console.log(bill);
             await sendemail(bill);
         }
 
