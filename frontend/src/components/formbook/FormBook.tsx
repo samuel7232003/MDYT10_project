@@ -270,7 +270,7 @@ export default function FormBook({setPayMode}:Props){
             <div className="form done">
                 <figure><img src={check_done} alt="" /></figure>
                 <p className='message'>Xin chân thành cảm ơn bạn đã ủng hộ dự án của chúng mình! Vé sẽ được gửi qua địa chỉ mail 
-                    <b>{userInfor.email}</b> trong thời gian sớm nhất.
+                    <b>{" "+userInfor.email}</b> trong thời gian sớm nhất.
                 </p>
                 <p className='back-btn' onClick={handleBack}>Trở lại</p>
             </div>}
