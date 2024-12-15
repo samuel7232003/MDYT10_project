@@ -10,6 +10,16 @@ const getAllBillService = async ()=>{
     }
 }
 
+const getBill = async (idBill) =>{
+    try {
+        const res = await billModel.findOne({idBill: idBill});
+        return res;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 module.exports = {
-    getAllBillService
+    getAllBillService, getBill
 }

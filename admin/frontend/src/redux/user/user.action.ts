@@ -11,3 +11,13 @@ export const setUser = (user: User):ThunkAction<void, RootState, unknown, AnyAct
         dispatch(userAction.setUser_(user));
     }
 }
+
+export const getProfile = (username:string, role: string):ThunkAction<void, RootState, unknown, AnyAction> => {
+    return async (dispatch, getState) =>{
+        try {
+            dispatch(userAction.setUser_({_id: "", username: username, role: role}));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}

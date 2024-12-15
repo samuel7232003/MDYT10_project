@@ -1,10 +1,7 @@
 export interface User{
     _id: string;
-    name: string;
-    phone: string;
-    email: string;
-    address: string;
-    listSeat: string[];
+    username: string;
+    role: string;
 }
 
 export interface UserModel{

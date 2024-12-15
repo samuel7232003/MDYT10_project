@@ -46,7 +46,7 @@ export default function Header({curPage} :Props){
                 <figure onClick={() => navigate('./')}><img src={mdyt10} alt="" /></figure>
             </div>
             <div className="header-right">
-                <p onClick={() => navigate('./login')}>Đăng nhập</p>
+                <p onClick={() => {navigate('./login'); localStorage.clear()}}>Đăng xuất</p>
             </div>
         </header>
     )

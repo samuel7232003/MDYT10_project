@@ -4,11 +4,8 @@ import { User, UserModel } from "./user.state";
 export const initialUserState:UserModel = {
     user: {
         _id: "",
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        listSeat: []
+        username: "",
+        role: "",
     }
 }
 
