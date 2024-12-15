@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { getListBill } from "../../redux/bill/bill.action";
 import { Bill } from "../../redux/bill/bill.state";
 import { getAllStatus, updateTicket } from "../../services/StatusService";
-import { getProfile } from "../../redux/user/user.action";
 import { setActivity } from "../../services/AccountService";
 
 interface DataType extends Bill{
