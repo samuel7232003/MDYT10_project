@@ -246,7 +246,7 @@ export default function FormBook({setPayMode}:Props){
                         <fieldset><input value={userInfor.email} type="email" onChange={e => handleChange("email", e.target.value)}/></fieldset>
                     </div>
                     <div className='item'>
-                        <figure><img src={email_icon} alt="" /></figure>
+                        <figure><img src={location_icon} alt="" /></figure>
                         <p className='sub-title'>Địa chỉ nhận*:</p>
                         <fieldset><input value={userInfor.address} type="text" onChange={e => handleChange("address", e.target.value)}/></fieldset>
                     </div>
