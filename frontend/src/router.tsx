@@ -14,14 +14,14 @@ export const router = createBrowserRouter([
                 path:"",
                 element: <Notfound/>
             },
-            {
-                path:"booking",
-                element: <Booking/>
-            },
-            {
-                path:"donate",
-                element: <Donate/>
-            }
+            // {
+            //     path:"booking",
+            //     element: <Booking/>
+            // },
+            // {
+            //     path:"donate",
+            //     element: <Donate/>
+            // }
         ]
     },
     {
