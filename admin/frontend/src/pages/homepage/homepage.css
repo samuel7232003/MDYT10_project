@@ -1,6 +1,7 @@
 .homepage{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding-top: 70px;
+}
+
+.homepage .sumary{
+    margin: 20px 10px;
 }

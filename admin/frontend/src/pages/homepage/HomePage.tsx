@@ -11,7 +11,7 @@ interface DataType extends Bill{
     index: number;
     key: string;
     numDone: number;
-    status: boolean;
+    status: string;
 }
 
 export default function HomePage(){
@@ -68,10 +68,10 @@ export default function HomePage(){
     function checkDone(idBill: string){
         const status = listStatus.find(index => index.idBill === idBill);
         if(status){
-            if(status.numDone === status.numSeat) return true;
-            else return false;
-        } 
-        else return false;
+            if(getTickets(idBill) !== "") return "DONE";
+            else return "WAIT";
+        }
+        else return "WAIT";
     }
 
     function getTickets(idBill: string){
@@ -147,17 +147,23 @@ export default function HomePage(){
             dataIndex: 'numSeat',
         },
         {
-            title: 'Số vé đã giao',
-            key: "numDone",
-            dataIndex: "numDone"
-        },
-        {
             title: 'Tình trạng',
             key: "status",
             dataIndex: "status",
+            filters: [
+                {
+                    text: 'Xong',
+                    value: 'DONE',
+                },
+                {
+                    text: 'Chờ giao',
+                    value: 'WAIT',
+                },
+            ],
+            onFilter: (value, record) => record.status.includes(value as string),
             render:(_, { status }) => (
-                <Tag color={status?'green':'volcano'}>
-                    {status?"DONE":"PENDING"}
+                <Tag color={status === "DONE"?'green':'volcano'}>
+                    {status==="DONE"?"Xong":"Chờ giao"}
                 </Tag>
             ),
         },
@@ -166,7 +172,7 @@ export default function HomePage(){
             key: "tickets",
             dataIndex: "tickets",
             render:(_, { status, idBill}) => (
-                !status?
+                !(status==="DONE")?
                     editMode===""?<>{getTickets(idBill)}<Button onClick={() => {setEditMode(idBill); setTicket(getTickets(idBill))}}>Thêm</Button></>
                     :idBill === editMode?<>
                         <Input onChange={e => setTicket(e.target.value)} value={ticket}/>
@@ -178,10 +184,21 @@ export default function HomePage(){
             )
         }
     ];
+
+    function findNumTickets(){
+        let sum = 0;
+        for(let i=0; i<listBill.length; i++){
+            sum = sum + listBill[i].numSeat;
+        }
+        return sum;
+    }
     
     
     return(
         <div className="homepage">
+            <div className="sumary">
+                Số vé bán được: {findNumTickets()}
+            </div>
             <div>
                 <Table<DataType> columns={columns} dataSource={listData}/>
             </div>
