@@ -8,7 +8,7 @@ export default function Notfound(){
         <div className="notfound">
             <div className='inner'>
                 <p className='num'>404</p>
-                <p>PAGE NOT FOUND!</p>
+                <p>HỆ THỐNG ĐANG BẢO TRÌ VUI LÒNG QUAY TRỞ LẠI SAU!</p>
                 <p onClick={() => navigate("/")} className='button'>Trang chủ</p>
             </div>
         </div>

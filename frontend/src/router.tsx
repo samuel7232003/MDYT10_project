@@ -12,20 +12,20 @@ export const router = createBrowserRouter([
         children:[
             {
                 path:"",
-                element: <Welcome/>
+                element: <Notfound/>
             },
-            {
-                path:"booking",
-                element: <Booking/>
-            },
-            {
-                path:"donate",
-                element: <Donate/>
-            }
+            // {
+            //     path:"booking",
+            //     element: <Booking/>
+            // },
+            // {
+            //     path:"donate",
+            //     element: <Donate/>
+            // }
         ]
     },
     {
         path: "*",
         element: <Notfound/>
-      },
+    },
 ]);
