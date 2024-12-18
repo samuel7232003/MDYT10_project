@@ -12,16 +12,16 @@ export const router = createBrowserRouter([
         children:[
             {
                 path:"",
-                element: <Notfound/>
+                element: <Welcome/>
             },
-            // {
-            //     path:"booking",
-            //     element: <Booking/>
-            // },
-            // {
-            //     path:"donate",
-            //     element: <Donate/>
-            // }
+            {
+                path:"booking",
+                element: <Booking/>
+            },
+            {
+                path:"donate",
+                element: <Donate/>
+            }
         ]
     },
     {
