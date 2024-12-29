@@ -4,6 +4,7 @@ import Welcome from "./pages/Welcome";
 import Booking from "./pages/booking/Booking";
 import Notfound from "./screens/NotFound";
 import Donate from "./pages/donate/Donate";
+import Research from "./pages/research/Research";
 
 export const router = createBrowserRouter([
     {
@@ -21,6 +22,10 @@ export const router = createBrowserRouter([
             {
                 path:"donate",
                 element: <Donate/>
+            },
+            {
+                path:"research",
+                element: <Research/>
             }
         ]
     },

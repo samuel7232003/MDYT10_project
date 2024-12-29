@@ -1,8 +1,8 @@
 header{
     height: 70px;
     width: 100vw;
-    background-color: rgba(212, 237, 231, 0.6);
-    box-shadow: 0 4px 4px rgba(255, 255, 255, 0.4);
+    /* background-color: rgba(212, 237, 231, 0.6);
+    box-shadow: 0 4px 4px rgba(255, 255, 255, 0.4); */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,6 +12,9 @@ header{
     left: 0;
     z-index: 9998;
     transition: top ease-in-out 0.25s;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    background-color: rgba(255, 255, 255, .15);
+    backdrop-filter: blur(5px);
 }
 
 header.hide {
@@ -79,7 +82,6 @@ header .header-right{
 
 header .header-right p{
     height: 50px;
-    width: 152px;
     border-radius: 8px;
     background-color: rgba(38, 190, 200, 0.8);
     color: white;
@@ -89,6 +91,8 @@ header .header-right p{
     justify-content: center;
     cursor: pointer;
     transition: background-color ease-in-out 0.25s;
+    font-size: 14px;
+    padding: 0 20px;
 }
 
 header .header-right p:hover{
@@ -101,10 +105,14 @@ header .header-right p:hover{
     }
 
     header .header-right p{
-        width: 130px;
+        text-align: center;
+        line-height: 1.2;
+        padding: 0 10px;
     }
+}
 
-    header .header-right .donate-now{
-        width: 77px;
+@media screen and (max-width: 425px){
+    header{
+        padding: 0 10px;
     }
 }

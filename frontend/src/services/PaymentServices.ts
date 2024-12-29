@@ -1,4 +1,4 @@
-import { Seat } from "../redux/seat/seat.state";
+import { Seat, Ticket } from "../redux/seat/seat.state";
 import { User } from "../redux/user/user.state";
 import { apiInstance } from "./api";
 
@@ -34,6 +34,20 @@ export async function getDataSeat() {
             listSeat.push(seat); 
         }
         return listSeat;
+    } catch (error) {
+        throw(error)
+    }
+}
+
+export async function getDataTicket() {
+    try {
+        const respone:any = await apiInstance.get('/getSeat');
+        let listTicket: Ticket[] = [];
+        for(let i = 0; i< respone.length; i++){
+            const ticket:Ticket = {idTicket: respone[i]._id, name: respone[i].name, phone: respone[i].phone, seat: respone[i].seat, code: ""}
+            listTicket.push(ticket); 
+        }
+        return listTicket;
     } catch (error) {
         throw(error)
     }
