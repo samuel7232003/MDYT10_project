@@ -115,6 +115,18 @@
     font-size: 16px;
 }
 
+.research .sub-inner.load{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.research .sub-inner.load .wait{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 @media screen and (max-width: 768px){
     .research .search-box h2 {
         font-size: 14px;

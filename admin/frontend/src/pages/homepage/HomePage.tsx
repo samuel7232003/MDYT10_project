@@ -6,6 +6,7 @@ import { getListBill } from "../../redux/bill/bill.action";
 import { Bill } from "../../redux/bill/bill.state";
 import { getAllStatus, updateTicket } from "../../services/StatusService";
 import { setActivity } from "../../services/AccountService";
+import { signin } from "../../services/test";
 
 interface DataType extends Bill{
     index: number;
@@ -29,6 +30,17 @@ export default function HomePage(){
         } catch (error) {
             console.log(error);
         }
+    }
+
+    function test(){
+        const fetchData = async ()=>{
+            try {
+                await signin({username: "thanh",password: "123456",firstname: "thanh",lastname: "le",dateBirth: new Date("07-02-2003") });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchData();
     }
 
     useEffect(() => {
@@ -196,7 +208,7 @@ export default function HomePage(){
     
     return(
         <div className="homepage">
-            <div className="sumary">
+            <div className="sumary" onClick={() => test()}>
                 Số vé bán được: {findNumTickets()}
             </div>
             <div>

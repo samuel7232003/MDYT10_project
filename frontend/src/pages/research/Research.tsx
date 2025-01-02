@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { getDataTicket } from '../../services/PaymentServices'
 import { Ticket } from '../../redux/seat/seat.state';
 import { useOutletContext } from 'react-router-dom';
+import { Spin } from 'antd';
 
 export default function Research(){
     const {setCurPage}:any = useOutletContext();
@@ -37,7 +38,7 @@ export default function Research(){
     return (
         <main className="research">
             <div className='inner'>
-                <div className='sub-inner'>
+                {tickets.length !==0 ? <div className='sub-inner'>
                     <div className='search-box'>
                         <figure><img src={search_icon} alt="" /></figure>
                         <h2>Tra cứu vé của bạn:</h2>
@@ -62,7 +63,12 @@ export default function Research(){
                             )}
                         </ul>
                     </div>
-                </div>
+                </div>:<div className='sub-inner load'>
+                    <div className='wait'>
+                        <Spin size="large" tip="Đang tải dữ liệu..."/>
+                        <p>Đang tải dữ liệu...</p>
+                    </div>
+                </div>}
             </div>
         </main>
     )

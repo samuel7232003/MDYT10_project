@@ -1,0 +1,87 @@
+.homepage{
+    padding-top: 70px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    padding: 70px 20px 0px;
+    background-image: url("../../images/background.png");
+    height: 100vh;
+}
+
+.homepage h1{
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 20px;
+}
+
+.homepage .video{
+    width: 100%;
+    height: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #d9d9d9;
+}
+
+.homepage video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ant-message.ant-message-top{
+    z-index: 9999;
+}
+
+.homepage .infor{
+    margin-top: 100px;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.574);
+    backdrop-filter: blur(5px);
+    padding: 20px 10px;
+}
+
+.homepage .infor p{
+    color: white;
+}
+
+.homepage .infor p span{
+    font-weight: bold;
+}
+
+.homepage .infor p.checkin{
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #26BEC8;
+    color: white;
+    font-weight: bold;
+    align-self: center;
+}
+
+.homepage .infor .bug{
+    color: red;
+}
+
+.homepage .infor div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.homepage .infor p.back{
+    padding: 10px;
+    border-radius: 8px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    align-self: center;
+}

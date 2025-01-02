@@ -17,12 +17,13 @@ export default function Login(){
     }
 
     function checklogin(){
-        message.loading("Tiến hành đăng nhập");
+        
         const username = loginInfo.username.trim();
         const password = loginInfo.password;
 
         const check = async ()=>{
             try {
+                message.loading("Tiến hành đăng nhập");
                 const res = await login(username, password);
                 if(res.EC === 1 || res.EC === 2) message.error("Sai tên đăng nhập hoặc mật khẩu");
                 else{
@@ -58,7 +59,7 @@ export default function Login(){
                     type="password" 
                     value={loginInfo.password} 
                     onChange={e => handleChange("password", e.target.value)}/>
-                <Button onClick={checklogin}>ĐĂNG NHẬP</Button>
+                <Button onClick={() => checklogin()}>ĐĂNG NHẬP</Button>
             </div>
         </div>
     )

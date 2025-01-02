@@ -23,3 +23,23 @@ export async function getDataBill() {
         throw(error)
     }
 }
+
+export async function getTickets(idBill: string) :Promise<any>{
+    try{
+        const res = await apiInstance.get(`/tickets?idBill=${idBill}`);
+        console.log(res);
+        return res;
+    } catch(error){
+        throw(error);
+    }
+}
+
+export async function updateActive(_id: string, mave: string) :Promise<any>{
+    try{
+        const res = await apiInstance.post(`/updateActive`, {_id: _id, mave: mave});
+        console.log(res);
+        return res;
+    } catch(error){
+        throw(error);
+    }
+}

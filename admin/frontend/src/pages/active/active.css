@@ -1,0 +1,13 @@
+.active{
+    margin-top: 70px;
+}
+
+.active ul li{
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 8px;
+    width: 500px;
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+}
