@@ -6,15 +6,6 @@ export default function Home(){
     const [curPage, setCurPage] = useState("home");
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const check = localStorage.getItem("access_token");
-
-        if(!check || check === "undefined") {
-            navigate("./login");
-        }
-        // eslint-disable-next-line
-    }, [])
-
     return (
         <div>
             <Header curPage={curPage}/>
