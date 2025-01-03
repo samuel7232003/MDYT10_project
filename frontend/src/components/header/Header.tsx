@@ -2,6 +2,7 @@ import './header.css';
 import mdyt10 from '../../images/mdyt10.png'
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 interface Props{
     curPage :string;
@@ -56,7 +57,8 @@ export default function Header({curPage} :Props){
             <div className="header-right">
                 <p onClick={() => navigate('./research')}>TRA CỨU</p>
                 <p className='donate-now' onClick={() => navigate('./donate')}>ỦNG HỘ</p>
-                <p onClick={() => navigate('./booking')}>MUA VÉ</p>
+                {/* <p onClick={() => navigate('./booking')}>MUA VÉ</p> */}
+                <p onClick={() => message.info("Đã hết thời gian bán vé! Vui lòng mua trực tiếp tại sự kiện!")}>MUA VÉ</p>
             </div>
         </header>
     )

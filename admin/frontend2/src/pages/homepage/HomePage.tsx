@@ -23,17 +23,18 @@ export default function HomePage() {
     const [ticket, setTicket] = useState<any | null>(null);
     const [isScanning, setIsScanning] = useState(true);
     const activeStream = useRef<IScannerControls | null>(null);
+    const fetchData = async () => {
+        try {
+            const res = await getTickets();
+            setTickets(res);
+        } catch (error) {
+            console.error("Error fetching tickets:", error);
+        }
+    };
 
     // Fetch tickets on component mount
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await getTickets();
-                setTickets(res);
-            } catch (error) {
-                console.error("Error fetching tickets:", error);
-            }
-        };
+        
         fetchData();
     }, []);
 
@@ -76,6 +77,7 @@ export default function HomePage() {
 
     // Handle the ticket search based on QR result
     useEffect(() => {
+        fetchData();
         if (result) {
             const foundTicket = tickets.find((ticket) => ticket.isActive === result);
             if (foundTicket) {
@@ -86,7 +88,7 @@ export default function HomePage() {
                 message.error("Không tìm thấy vé!");
             }
         }
-    }, [result, tickets]);
+    }, [result]);
 
     // Handle check-in and reset state
     async function handleCheckin() {
