@@ -42,16 +42,24 @@ export default function HomePage() {
     const startDecoding = useDebounce(() => {
         if (videoRef.current && isScanning) {
             const codeReader = new BrowserMultiFormatReader();
-            codeReader
-                .decodeFromVideoDevice(undefined, videoRef.current, (result_, err) => {
-                    if (result_) {
-                        setResult(result_.getText());
-                    }
-                })
-                .then((stream) => {
-                    activeStream.current = stream;
-                })
-                .catch((err) => console.error("Error starting camera:", err));
+            navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then(() => {
+                codeReader
+                    .decodeFromVideoDevice(undefined, videoRef.current, (result_, err) => {
+                        if (result_) {
+                            setResult(result_.getText());
+                        }
+                    })
+                    .then((stream) => {
+                        activeStream.current = stream;
+                    })
+                    .catch((err) => console.error("Error starting camera:", err));
+            })
+            .catch((err) => {
+                console.error("Camera access denied or not available:", err);
+                message.error("Không thể truy cập camera. Vui lòng kiểm tra quyền!");
+            });
         }
     }, 1000);
 
